@@ -1,0 +1,39 @@
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+/.cache
+
+### dependencies
+/node_modules/
+**/node_modules
+**/.pnpm
+.pnpm-store
+
+### testing
+test-reports
+
+### production
+/dist
+/build
+.tsbuildinfo
+
+### env
+.env*
+
+### PNPM
+pnpm-debug.log*
+
+### storybook
+*storybook.log
+storybook-static
+
+### linter caches
+.stylelintcache
+.prettiercache
+
+### husky
+.husky/_/

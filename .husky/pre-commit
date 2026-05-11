@@ -1,0 +1,4 @@
+node_version="$(cat .nvmrc)"
+export PATH="$HOME/.nvm/versions/node/v$node_version/bin:$PATH"
+
+pnpm exec lint-staged
