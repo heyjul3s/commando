@@ -19,8 +19,6 @@ export function WorkspacePreview({
   onClearRecentCommands,
   onOpenCommandPalette,
 }: WorkspacePreviewProps) {
-  console.log(recentCommands);
-
   return (
     <section
       className={styles['workspace-preview']}
