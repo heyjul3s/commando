@@ -1,0 +1,59 @@
+.workspace-header {
+  align-items: center;
+  border-bottom: 1px solid var(--color-border-subtle);
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  padding-bottom: 28px;
+}
+
+.workspace-header__eyebrow {
+  color: var(--color-text-muted);
+  font-size: 0.813rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.workspace-header h1 {
+  color: var(--color-text-primary);
+  font-size: clamp(2rem, 5vw, 4rem);
+  letter-spacing: 0;
+  line-height: 0.95;
+  margin: 6px 0 0;
+}
+
+.workspace-header__trigger-button {
+  align-items: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-xs);
+  color: var(--color-text-secondary);
+  display: flex;
+  font-size: 1rem;
+  gap: 10px;
+  height: 44px;
+  min-width: 276px;
+  opacity: 1;
+  padding: 0 10px 0 14px;
+  transition: opacity 100ms 500ms;
+}
+
+.workspace-header__trigger-button span {
+  flex: 1;
+  text-align: left;
+}
+
+@media (width <= 760px) {
+  .workspace-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .workspace-header__trigger-button {
+    min-width: 0;
+    width: 100%;
+  }
+}

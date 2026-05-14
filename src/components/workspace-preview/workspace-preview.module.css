@@ -1,0 +1,100 @@
+.workspace-preview {
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg);
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  min-height: 640px;
+  overflow: hidden;
+  width: min(100%, 1040px);
+}
+
+.workspace-preview__workspace {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 30px;
+}
+
+.workspace-preview__content-grid {
+  display: grid;
+  flex: 1;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
+  padding-top: 28px;
+}
+
+.workspace-preview__primary-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 390px;
+  padding: 30px;
+}
+
+.workspace-preview__command-heading {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.workspace-preview__primary-panel-icon {
+  background: var(--color-accent-muted);
+  border-radius: 8px;
+  color: var(--color-text-primary);
+  display: flex;
+  height: 44px;
+  justify-content: center;
+  place-items: center;
+  width: 44px;
+}
+
+.workspace-preview__panel-label {
+  color: var(--color-text-muted);
+  font-size: 0.813rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.workspace-preview__primary-panel h2 {
+  color: var(--color-text-primary);
+  font-size: clamp(1.8rem, 4vw, 3.25rem);
+  letter-spacing: 0;
+  line-height: 1;
+  margin: 14px 0 0;
+  max-width: 520px;
+}
+
+.workspace-preview__primary-panel p:last-child {
+  color: var(--color-text-secondary);
+  font-size: 1.063rem;
+  line-height: 1.6;
+  margin: 16px 0 0;
+  max-width: 520px;
+}
+
+@media (width <= 760px) {
+  .workspace-preview {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .workspace-preview__workspace {
+    padding: 20px;
+  }
+
+  .workspace-preview__content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace-preview__primary-panel {
+    min-height: 320px;
+    padding: 22px;
+  }
+}

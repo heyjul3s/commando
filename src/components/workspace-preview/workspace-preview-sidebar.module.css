@@ -1,0 +1,40 @@
+.workspace-preview-sidebar {
+  align-items: center;
+  background: var(--color-surface-hover);
+  border-right: 1px solid var(--color-border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px 14px;
+}
+
+.workspace-preview-sidebar__brand-mark {
+  background: var(--color-text-primary);
+  border-radius: 8px;
+  color: var(--color-text-inverse);
+  display: grid;
+  height: 36px;
+  place-items: center;
+  width: 36px;
+}
+
+.workspace-preview-sidebar__pill {
+  background: var(--color-border);
+  border-radius: 999px;
+  height: 8px;
+  width: 32px;
+}
+
+.workspace-preview-sidebar__pill--active {
+  background: var(--color-accent);
+}
+
+.workspace-preview-sidebar__pill--short {
+  width: 22px;
+}
+
+@media (width <= 760px) {
+  .workspace-preview-sidebar {
+    display: none;
+  }
+}
