@@ -1,8 +1,8 @@
 import { useAppEvents } from './use-app-events';
 import { useAppState } from './use-app-state';
-import { COMMANDS } from '../../../constants/commands';
+import { COMMANDS } from '../../../constants';
 
-import type { Command } from '../../../constants/commands';
+import type { Command } from '../../../constants';
 
 const COMMAND_BY_ID = new Map(COMMANDS.map((command) => [command.id, command]));
 

@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import { COMMANDS } from '../../../constants/commands';
+import { COMMANDS } from '../../../constants';
 import { useAppState } from './use-app-state';
 
 describe('use-app-state', () => {

@@ -1,9 +1,8 @@
 import { renderHook } from '@testing-library/react';
 import { useCommandPaletteKeyboard } from './use-command-palette-keyboard';
-import { DOM_EVENT } from '../../../constants/events';
-import { KEYBOARD_KEY } from '../../../constants/keyboard';
+import { DOM_EVENT, KEYBOARD_KEY } from '../../../constants';
 
-import type { KeyboardKey } from '../../../constants/keyboard';
+import type { KeyboardKey } from '../../../constants';
 
 function setup(overrides = {}) {
   const props = {

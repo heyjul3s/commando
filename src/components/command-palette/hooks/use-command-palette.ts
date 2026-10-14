@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { Command } from '../../../constants/commands';
+import type { Command } from '../../../constants';
 import { useCommandPaletteKeyboard } from './use-command-palette-keyboard';
 import { useCommandPaletteLifecycle } from './use-command-palette-lifecycle';
 import { useCommandPaletteSearch } from './use-command-palette-search';

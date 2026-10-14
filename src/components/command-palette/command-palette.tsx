@@ -1,7 +1,7 @@
 import { AvailableCommands } from './available-commands';
 import { useCommandPalette } from './hooks/use-command-palette';
 import { SearchBar } from './search-bar';
-import type { Command } from '../../constants/commands';
+import type { Command } from '../../constants';
 import styles from './command-palette.module.css';
 
 type CommandPaletteProps = {

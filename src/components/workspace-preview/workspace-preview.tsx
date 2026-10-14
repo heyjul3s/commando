@@ -4,7 +4,7 @@ import { WorkspaceHeader } from './workspace-header';
 
 import styles from './workspace-preview.module.css';
 
-import type { Command, Commands } from '../../constants/commands';
+import type { Command, Commands } from '../../constants';
 
 type WorkspacePreviewProps = {
   recentCommands: Commands;

@@ -1,5 +1,6 @@
-import type { Command } from '../../constants/commands';
 import styles from './available-commands.module.css';
+
+import type { Command } from '../../constants';
 
 type AvailableCommandsProps = {
   activeIndex: number;

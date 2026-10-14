@@ -1,6 +1,6 @@
-import { CommandPalette } from '../command-palette/command-palette';
+import { CommandPalette } from '../command-palette';
 import { useApp } from './hooks/use-app';
-import { WorkspacePreview } from '../workspace-preview/workspace-preview';
+import { WorkspacePreview } from '../workspace-preview';
 import styles from './app.module.css';
 
 export function App() {

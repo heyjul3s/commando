@@ -57,7 +57,7 @@ export const COMMANDS: Commands = [
     icon: Sparkles,
   },
   {
-    id: 'favorite',
+    id: 'favourite',
     label: 'Save Current View',
     group: 'Actions',
     icon: Star,

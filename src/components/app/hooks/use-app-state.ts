@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { COMMANDS } from '../../../constants/commands';
+import { COMMANDS, STORAGE_KEYS } from '../../../constants';
 import { storage } from '../../../utils';
 
-import type { Command } from '../../../constants/commands';
-import { STORAGE_KEYS } from '../../../constants';
+import type { Command } from '../../../constants';
 
 const RECENT_COMMAND_LIMIT = 6;
 

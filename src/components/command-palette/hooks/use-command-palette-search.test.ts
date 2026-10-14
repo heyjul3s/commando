@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { act } from 'react';
-import { COMMANDS } from '../../../constants/commands';
+import { COMMANDS } from '../../../constants';
 import { useCommandPaletteSearch } from './use-command-palette-search';
 
 describe('use-command-palette-search', () => {

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import type { Command } from '../../../constants/commands';
+import type { Command } from '../../../constants';
 
 type UseCommandPaletteSelectionProps = {
   commands: Command[];

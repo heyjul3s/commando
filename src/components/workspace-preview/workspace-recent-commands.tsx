@@ -1,6 +1,6 @@
 import { ListX } from 'lucide-react';
 
-import type { Command } from '../../constants/commands';
+import type { Command } from '../../constants';
 
 import styles from './workspace-recent-commands.module.css';
 

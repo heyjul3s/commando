@@ -1,7 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import { COMMANDS } from '../../../constants/commands';
-import { DOM_EVENT } from '../../../constants/events';
-import { KEYBOARD_KEY } from '../../../constants/keyboard';
+import { COMMANDS, DOM_EVENT, KEYBOARD_KEY } from '../../../constants';
 import { useApp } from './use-app';
 
 function dispatchCommandPaletteShortcut() {

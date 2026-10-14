@@ -1,10 +1,10 @@
 import { renderHook } from '@testing-library/react';
 import { act } from 'react';
 import { vi } from 'vitest';
-import { COMMANDS, type Command } from '../../../constants/commands';
-import { DOM_EVENT } from '../../../constants/events';
-import { KEYBOARD_KEY } from '../../../constants/keyboard';
+import { COMMANDS, DOM_EVENT, KEYBOARD_KEY } from '../../../constants';
 import { useCommandPalette } from './use-command-palette';
+
+import type { Command } from '../../../constants';
 
 type UseCommandPaletteProps = {
   commands: Command[];

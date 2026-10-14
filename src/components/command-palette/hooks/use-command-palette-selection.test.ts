@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { act } from 'react';
 import { vi } from 'vitest';
-import { COMMANDS } from '../../../constants/commands';
+import { COMMANDS } from '../../../constants';
 import { useCommandPaletteSelection } from './use-command-palette-selection';
 
 describe('use-command-palette-selection', () => {
