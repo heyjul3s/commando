@@ -14,7 +14,7 @@ const config: Configuration = {
       return [];
     }
 
-    return `pnpm exec tsc --project ./tsconfig.json --noEmit`;
+    return `corepack pnpm exec tsc --project ./tsconfig.json --noEmit`;
   },
 
   '**/*.{ts,tsx,js,jsx}': (filenames) => {
@@ -27,10 +27,10 @@ const config: Configuration = {
     const files = matchedFiles.join(' ');
 
     return [
-      `pnpm exec oxlint --fix ${files}`,
-      `pnpm exec prettier --write ${files}`,
-      `pnpm exec markuplint ${files}`,
-      `pnpm exec vitest related --passWithNoTests --run ${files}`,
+      `corepack pnpm exec oxlint --fix ${files}`,
+      `corepack pnpm exec prettier --write ${files}`,
+      `corepack pnpm exec markuplint ${files}`,
+      `corepack pnpm exec vitest related --passWithNoTests --run ${files}`,
     ];
   },
 
@@ -40,7 +40,7 @@ const config: Configuration = {
     }
 
     const files = filenames.join(' ');
-    return [`pnpm exec stylelint ${files} --fix`];
+    return [`corepack pnpm exec stylelint ${files} --fix`];
   },
 
   '**/*.{md,json}': (filenames) => {
@@ -48,7 +48,7 @@ const config: Configuration = {
       return [];
     }
 
-    return `pnpm exec prettier --write ${filenames.join(' ')}`;
+    return `corepack pnpm exec prettier --write ${filenames.join(' ')}`;
   },
 };
 
