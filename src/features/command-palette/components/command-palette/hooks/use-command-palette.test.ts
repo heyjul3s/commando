@@ -1,0 +1,83 @@
+import { useCommandPaletteStore } from '../../../store';
+import { useWorkspacePreviewStore } from '../../../../workspace-preview/store';
+import { AppProviders } from '../../../../../app/providers/app-providers';
+import { renderHook } from '@testing-library/react';
+import { act } from 'react';
+import { COMMANDS, DOM_EVENT, KEYBOARD_KEY } from '../../../../../shared/constants';
+import { useCommandPalette } from './use-command-palette';
+
+function setup() {
+  const hook = renderHook(
+    () => ({
+      ...useCommandPalette(),
+      paletteStore: useCommandPaletteStore(),
+      workspaceStore: useWorkspacePreviewStore(),
+    }),
+    { wrapper: AppProviders },
+  );
+
+  act(() => hook.result.current.paletteStore.getState().actions.setIsOpen(true));
+  return hook;
+}
+
+function dispatchKeyDown(key: string) {
+  window.dispatchEvent(
+    new KeyboardEvent(DOM_EVENT.KeyDown, {
+      cancelable: true,
+      key,
+    }),
+  );
+}
+
+describe('use-command-palette', () => {
+  beforeEach(() => localStorage.clear());
+  it('does not subscribe to query or selection changes', () => {
+    const { result } = setup();
+    const previous = result.current;
+    act(() => {
+      result.current.paletteStore.getState().actions.setQuery('dashboard');
+      result.current.paletteStore.getState().actions.setActiveIndex(1);
+    });
+    expect(result.current).toBe(previous);
+  });
+
+  it('closes the palette', () => {
+    const { result } = setup();
+
+    act(() => {
+      result.current.actions.onCloseCommandPalette();
+    });
+
+    expect(result.current.paletteStore.getState().isOpen).toBe(false);
+  });
+
+  it('selects the active command from the keyboard', () => {
+    const { result } = setup();
+
+    act(() => {
+      dispatchKeyDown(KEYBOARD_KEY.ArrowDown);
+    });
+
+    act(() => {
+      dispatchKeyDown(KEYBOARD_KEY.Enter);
+    });
+
+    expect(result.current.workspaceStore.getState().selectedCommand).toBe(COMMANDS[1]);
+    expect(result.current.workspaceStore.getState().recentCommandIds).toEqual([COMMANDS[1].id]);
+    expect(result.current.paletteStore.getState().isOpen).toBe(false);
+  });
+
+  it('resets search and selection when the palette closes', () => {
+    const { result } = setup();
+
+    act(() => {
+      result.current.paletteStore.getState().actions.setQuery('dashboard');
+      result.current.paletteStore.getState().actions.setActiveIndex(1);
+    });
+
+    act(() => result.current.paletteStore.getState().actions.closeCommandPalette());
+
+    expect(result.current.paletteStore.getState().query).toBe('');
+    expect(result.current.paletteStore.getState().activeIndex).toBe(0);
+  });
+});
