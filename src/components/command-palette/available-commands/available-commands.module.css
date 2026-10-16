@@ -34,7 +34,7 @@
   width: 100%;
 }
 
-.available-commands__item[data-selected="true"],
+.available-commands__item[data-selected='true'],
 .available-commands__item:hover {
   background: var(--color-surface-hover);
 }

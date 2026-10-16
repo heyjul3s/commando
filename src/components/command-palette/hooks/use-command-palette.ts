@@ -1,74 +1,25 @@
-import { useCallback } from 'react';
-import type { Command } from '../../../constants';
+import { useCommandPaletteStore } from '../../../store/command-palette';
 import { useCommandPaletteKeyboard } from './use-command-palette-keyboard';
 import { useCommandPaletteLifecycle } from './use-command-palette-lifecycle';
-import { useCommandPaletteSearch } from './use-command-palette-search';
-import { useCommandPaletteSelection } from './use-command-palette-selection';
+import type { MouseEvent } from 'react';
 
-type UseCommandPaletteProps = {
-  commands: Command[];
-  onOpenChange: (open: boolean) => void;
-  onSelect: (command: Command) => void;
-  open: boolean;
-};
+export function useCommandPalette() {
+  const paletteStore = useCommandPaletteStore();
+  const isOpen = paletteStore.use.isOpen();
+  const { closeCommandPalette } = paletteStore.use.actions();
 
-export function useCommandPalette({
-  commands,
-  onOpenChange,
-  onSelect,
-  open,
-}: UseCommandPaletteProps) {
-  const closeCommandPalette = useCallback(() => {
-    onOpenChange(false);
-  }, [onOpenChange]);
+  const handleDialogMouseDown = (event: MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+  };
 
-  const selectCommand = useCallback(
-    (command: Command) => {
-      onSelect(command);
-      closeCommandPalette();
-    },
-    [closeCommandPalette, onSelect],
-  );
-
-  const search = useCommandPaletteSearch({ commands });
-  const selection = useCommandPaletteSelection({
-    commands: search.derived.filteredCommands,
-    onSelect: selectCommand,
-  });
-
-  useCommandPaletteLifecycle({
-    actions: {
-      resetSearch: search.actions.resetSearch,
-      resetSelection: selection.actions.resetSelection,
-    },
-    state: {
-      open,
-      query: search.state.query,
-    },
-  });
-
-  useCommandPaletteKeyboard({
-    onActivateNextCommand: selection.actions.activateNextCommand,
-    onActivatePreviousCommand: selection.actions.activatePreviousCommand,
-    onClose: closeCommandPalette,
-    onSelectActiveCommand: selection.actions.selectActiveCommand,
-    open,
-  });
+  useCommandPaletteLifecycle();
+  useCommandPaletteKeyboard();
 
   return {
+    state: { isOpen },
     actions: {
-      closeCommandPalette,
-      selectCommand,
-      setActiveIndex: selection.actions.setActiveIndex,
-      setQuery: search.actions.setQuery,
-    },
-    derived: {
-      filteredCommands: search.derived.filteredCommands,
-      groupedCommands: search.derived.groupedCommands,
-    },
-    state: {
-      activeIndex: selection.state.activeIndex,
-      query: search.state.query,
+      onCloseCommandPalette: closeCommandPalette,
+      onDialogMouseDown: handleDialogMouseDown,
     },
   };
 }

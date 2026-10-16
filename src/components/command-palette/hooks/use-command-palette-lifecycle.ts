@@ -1,28 +1,15 @@
 import { useEffect } from 'react';
+import { useCommandPaletteStore } from '../../../store/command-palette';
 
-type UseCommandPaletteLifecycleProps = {
-  actions: {
-    resetSearch: () => void;
-    resetSelection: () => void;
-  };
-  state: {
-    open: boolean;
-    query: string;
-  };
-};
-
-export function useCommandPaletteLifecycle({ actions, state }: UseCommandPaletteLifecycleProps) {
-  const { resetSearch, resetSelection } = actions;
-  const { open, query } = state;
+export function useCommandPaletteLifecycle() {
+  const palette = useCommandPaletteStore();
+  const open = palette.use.isOpen();
+  const { setQuery, setActiveIndex } = palette.use.actions();
 
   useEffect(() => {
     if (!open) {
-      resetSearch();
-      resetSelection();
+      setQuery('');
+      setActiveIndex(0);
     }
-  }, [open, resetSearch, resetSelection]);
-
-  useEffect(() => {
-    resetSelection();
-  }, [query, resetSelection]);
+  }, [open, setQuery, setActiveIndex]);
 }

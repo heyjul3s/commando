@@ -1,22 +1,10 @@
+import { useAvailableCommands } from './use-available-commands';
 import styles from './available-commands.module.css';
 
-import type { Command } from '../../constants';
-
-type AvailableCommandsProps = {
-  activeIndex: number;
-  filteredCommands: Command[];
-  groupedCommands: Record<string, Command[]>;
-  onActiveIndexChange: (index: number) => void;
-  onSelect: (command: Command) => void;
-};
-
-export function AvailableCommands({
-  activeIndex,
-  filteredCommands,
-  groupedCommands,
-  onActiveIndexChange,
-  onSelect,
-}: AvailableCommandsProps) {
+export function AvailableCommands() {
+  const { state, actions, derived } = useAvailableCommands();
+  const { activeIndex } = state;
+  const { filteredCommands, groupedCommands } = derived;
   let commandIndex = -1;
 
   return (
@@ -30,7 +18,9 @@ export function AvailableCommands({
             {groupCommands.map((command) => {
               commandIndex += 1;
               const Icon = command.icon;
-              const selected = commandIndex === activeIndex;
+              const index = commandIndex;
+              const selected = index === activeIndex;
+              const handlers = actions.getCommandHandlers(command, index);
 
               return (
                 <button
@@ -40,8 +30,8 @@ export function AvailableCommands({
                   role="option"
                   aria-selected={selected}
                   type="button"
-                  onMouseEnter={() => onActiveIndexChange(commandIndex)}
-                  onClick={() => onSelect(command)}
+                  onMouseEnter={handlers.onMouseEnter}
+                  onClick={handlers.onClick}
                 >
                   <span className={styles['available-commands__item-icon']}>
                     <Icon size={17} aria-hidden="true" />
