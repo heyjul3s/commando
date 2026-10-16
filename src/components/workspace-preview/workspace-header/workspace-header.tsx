@@ -1,11 +1,10 @@
+import { useWorkspaceHeader } from './use-workspace-header';
 import { Search } from 'lucide-react';
 import styles from './workspace-header.module.css';
 
-type WorkspaceHeaderProps = {
-  onOpenCommandPalette: () => void;
-};
+export function WorkspaceHeader() {
+  const { actions } = useWorkspaceHeader();
 
-export function WorkspaceHeader({ onOpenCommandPalette }: WorkspaceHeaderProps) {
   return (
     <header className={styles['workspace-header']}>
       <div>
@@ -16,7 +15,7 @@ export function WorkspaceHeader({ onOpenCommandPalette }: WorkspaceHeaderProps) 
       <button
         className={styles['workspace-header__trigger-button']}
         type="button"
-        onClick={onOpenCommandPalette}
+        onClick={actions.onOpenCommandPalette}
       >
         <Search size={17} aria-hidden="true" />
         <span>Open command menu</span>

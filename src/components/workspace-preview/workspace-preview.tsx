@@ -1,24 +1,15 @@
-import { WorkspacePreviewSidebar } from './workspace-preview-sidebar';
-import { WorkspaceRecentCommands } from './workspace-recent-commands';
-import { WorkspaceHeader } from './workspace-header';
+import { WorkspacePreviewSidebar } from './workspace-preview-sidebar/workspace-preview-sidebar';
+import { WorkspaceRecentCommands } from './workspace-recent-commands/workspace-recent-commands';
+import { WorkspaceHeader } from './workspace-header/workspace-header';
 
 import styles from './workspace-preview.module.css';
 
-import type { Command, Commands } from '../../constants';
+import { useWorkspacePreview } from './use-workspace-preview';
 
-type WorkspacePreviewProps = {
-  recentCommands: Commands;
-  selectedCommand: Command;
-  onClearRecentCommands: () => void;
-  onOpenCommandPalette: () => void;
-};
+export function WorkspacePreview() {
+  const { state } = useWorkspacePreview();
+  const { selectedCommand } = state;
 
-export function WorkspacePreview({
-  recentCommands,
-  selectedCommand,
-  onClearRecentCommands,
-  onOpenCommandPalette,
-}: WorkspacePreviewProps) {
   return (
     <section
       className={styles['workspace-preview']}
@@ -27,7 +18,7 @@ export function WorkspacePreview({
       <WorkspacePreviewSidebar />
 
       <div className={styles['workspace-preview__workspace']}>
-        <WorkspaceHeader onOpenCommandPalette={onOpenCommandPalette} />
+        <WorkspaceHeader />
 
         <div className={styles['workspace-preview__content-grid']}>
           <section
@@ -45,10 +36,7 @@ export function WorkspacePreview({
             <p>A single command palette UI component demo</p>
           </section>
 
-          <WorkspaceRecentCommands
-            onClearRecentCommands={onClearRecentCommands}
-            recentCommands={recentCommands}
-          />
+          <WorkspaceRecentCommands />
         </div>
       </div>
     </section>

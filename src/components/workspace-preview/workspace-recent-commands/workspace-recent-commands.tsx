@@ -1,19 +1,12 @@
 import { ListX } from 'lucide-react';
 
-import type { Command } from '../../constants';
+import { useWorkspaceRecentCommands } from './use-workspace-recent-commands';
 
 import styles from './workspace-recent-commands.module.css';
 
-type WorkspaceRecentCommandsProps = {
-  onClearRecentCommands: () => void;
-  recentCommands: Command[];
-};
-
-export function WorkspaceRecentCommands({
-  onClearRecentCommands,
-  recentCommands,
-}: WorkspaceRecentCommandsProps) {
-  const isEmptyRecentCommands = recentCommands.length === 0;
+export function WorkspaceRecentCommands() {
+  const { actions, derived } = useWorkspaceRecentCommands();
+  const { recentCommands, isEmptyRecentCommands } = derived;
 
   return (
     <section className={styles['workspace-recent-commands']} aria-label="Recent commands">
@@ -47,7 +40,7 @@ export function WorkspaceRecentCommands({
         <button
           className={styles['workspace-recent-commands__clear-button']}
           disabled={isEmptyRecentCommands}
-          onClick={onClearRecentCommands}
+          onClick={actions.onClearRecentCommands}
           type="button"
         >
           <ListX size={18} aria-hidden="true" />
