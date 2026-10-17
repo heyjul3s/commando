@@ -1,2 +1,9 @@
 allowBuilds:
   esbuild: true
+
+# Markuplint's JSX parser still requires the JavaScript TypeScript compiler API.
+# Supply it locally so the parser's tooling peers use TS 6, not the app's TS 7.
+packageExtensions:
+  '@markuplint/jsx-parser@*':
+    dependencies:
+      typescript: 6.0.3

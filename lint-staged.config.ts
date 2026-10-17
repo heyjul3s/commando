@@ -10,6 +10,10 @@ function filterIgnoredFiles(filenames: readonly string[]) {
   });
 }
 
+function isSourceFile(filename: string) {
+  return relative(process.cwd(), filename).split(sep).join('/').startsWith('src/');
+}
+
 const config: Configuration = {
   'src/**/*.{ts,tsx}': (filenames) => {
     const files = filterIgnoredFiles(filenames);
@@ -30,12 +34,35 @@ const config: Configuration = {
 
     const files = matchedFiles.join(' ');
 
-    return [
+    const tasks = [
       `corepack pnpm exec oxlint --fix ${files}`,
       `corepack pnpm exec prettier --write ${files}`,
-      `corepack pnpm exec markuplint ${files}`,
-      `corepack pnpm exec vitest related --passWithNoTests --run ${files}`,
     ];
+
+    const sourceFiles = matchedFiles.filter(isSourceFile);
+    const markupFiles = sourceFiles.filter((filename) => /\.[jt]sx$/.test(filename));
+
+    if (markupFiles.length > 0) {
+      tasks.push(`corepack pnpm exec markuplint ${markupFiles.join(' ')}`);
+    }
+
+    if (sourceFiles.length > 0) {
+      tasks.push(
+        `corepack pnpm exec vitest related --passWithNoTests --run ${sourceFiles.join(' ')}`,
+      );
+    }
+
+    return tasks;
+  },
+
+  'src/**/*.html': (filenames) => {
+    const files = filterIgnoredFiles(filenames);
+
+    if (files.length === 0) {
+      return [];
+    }
+
+    return `corepack pnpm exec markuplint ${files.join(' ')}`;
   },
 
   'src/**/*.{module.css,css}': (filenames) => {
