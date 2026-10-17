@@ -1,0 +1,8 @@
+import { expect } from 'storybook/test';
+import type { StoryContext } from '@storybook/react-vite';
+
+export async function verifyRendered({ canvasElement, step }: StoryContext) {
+  await step('{{componentName}} is visible', async () => {
+    await expect(canvasElement).toBeVisible();
+  });
+}

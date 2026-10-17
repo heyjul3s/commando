@@ -1,0 +1,15 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { {{componentName}} } from '../{{name}}';
+import { {{camelCase componentName}}Fixtures } from './{{name}}.fixtures';
+
+const meta = {
+  title: {{{statesTitle}}},
+  component: {{componentName}},
+  parameters: { layout: 'centered' },
+  args: {{camelCase componentName}}Fixtures.default,
+} satisfies Meta<typeof {{componentName}}>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {};

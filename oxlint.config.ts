@@ -7,7 +7,7 @@ export default defineConfig({
   env: {
     builtin: true,
   },
-  ignorePatterns: ['src/route-tree.gen.ts'],
+  ignorePatterns: ['src/route-tree.gen.ts', 'plopfile.js', 'plop-templates/**'],
   rules: {
     'eslint/no-extra-boolean-cast': 'off',
     'eslint/no-unused-vars': 'error',

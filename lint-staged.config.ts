@@ -1,9 +1,13 @@
 import type { Configuration } from 'lint-staged';
+import { relative, sep } from 'node:path';
 
-const ignoredFiles = new Set(['src/route-tree.gen.ts']);
+const ignoredFiles = new Set(['src/route-tree.gen.ts', 'plopfile.js']);
 
 function filterIgnoredFiles(filenames: readonly string[]) {
-  return filenames.filter((filename) => !ignoredFiles.has(filename));
+  return filenames.filter((filename) => {
+    const projectPath = relative(process.cwd(), filename).split(sep).join('/');
+    return !ignoredFiles.has(projectPath) && !projectPath.startsWith('plop-templates/');
+  });
 }
 
 const config: Configuration = {

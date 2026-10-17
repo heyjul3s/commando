@@ -1,0 +1,8 @@
+import type { ComponentProps } from 'react';
+import type { {{componentName}} } from '../{{name}}';
+
+// Add required props and representative variants here. Provider state belongs
+// in a story decorator; it is not a component prop.
+export const {{camelCase componentName}}Fixtures = {
+  default: {},
+} satisfies Record<string, Partial<ComponentProps<typeof {{componentName}}>>>;

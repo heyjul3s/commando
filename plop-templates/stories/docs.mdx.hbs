@@ -1,0 +1,18 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as Stories from './{{name}}.stories';
+
+<Meta title="{{docsTitle}}" />
+
+# {{sentenceCase name}}
+
+Describe this component's purpose and when to use it.
+
+## States
+
+<Canvas of={Stories.Default} />
+
+## Behavior and integration
+
+Document the component's state owner, required providers, interaction outcomes,
+and expected theme surface. The global preview supplies `AppProviders` and styles;
+add local fixture providers when a scenario needs controlled store state.
