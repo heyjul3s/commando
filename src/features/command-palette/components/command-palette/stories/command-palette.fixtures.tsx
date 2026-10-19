@@ -1,4 +1,5 @@
 import { createElement, useState } from 'react';
+import styles from './command-stories.module.css';
 import { createStore } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { createStoreSelectors } from '../../../../../shared/store/create-selectors';
@@ -63,11 +64,17 @@ function WorkspaceStatus() {
   const selected = workspace.use.selectedCommand();
   const recentIds = workspace.use.recentCommandIds();
 
-  return createElement(
-    'div',
-    null,
-    createElement('output', { 'aria-label': 'Selected command' }, selected.label),
-    createElement('output', { 'aria-label': 'Recent command IDs' }, recentIds.join(', ')),
+  return (
+    <dl className={styles['fixture__readout']}>
+      <dt>Selected command</dt>
+      <dd>
+        <output aria-label="Selected command">{selected.label}</output>
+      </dd>
+      <dt>Recent command IDs</dt>
+      <dd>
+        <output aria-label="Recent command IDs">{recentIds.join(', ') || 'None yet'}</output>
+      </dd>
+    </dl>
   );
 }
 
@@ -77,25 +84,35 @@ function PaletteStatus() {
   const activeIndex = palette.use.activeIndex();
   const isOpen = palette.use.isOpen();
 
-  return createElement(
-    'div',
-    null,
-    createElement('output', { 'aria-label': 'Stored query' }, query),
-    createElement('output', { 'aria-label': 'Active index' }, activeIndex),
-    createElement('output', { 'aria-label': 'Palette status' }, isOpen ? 'Open' : 'Closed'),
+  return (
+    <dl className={styles['fixture__readout']}>
+      <dt>Query</dt>
+      <dd>
+        <output aria-label="Stored query">{query}</output>
+      </dd>
+      <dt>Highlighted index</dt>
+      <dd>
+        <output aria-label="Active index">{activeIndex}</output>
+      </dd>
+      <dt>Palette</dt>
+      <dd>
+        <output aria-label="Palette status">{isOpen ? 'Open' : 'Closed'}</output>
+      </dd>
+    </dl>
   );
 }
 
 function PaletteLauncher() {
   const palette = useCommandPaletteStore();
 
-  return createElement(
-    'button',
-    {
-      onClick: () => palette.getState().actions.setIsOpen(true),
-      type: 'button',
-    },
-    'Open command palette',
+  return (
+    <button
+      className={styles['fixture__launcher']}
+      onClick={() => palette.getState().actions.setIsOpen(true)}
+      type="button"
+    >
+      Open command palette
+    </button>
   );
 }
 
@@ -105,17 +122,27 @@ export function withCommandPaletteFixture(
 ) {
   const fixture: Fixture =
     context.parameters.commandPaletteFixture ?? commandPaletteFixtures.default;
+  const showStatus = context.parameters.showWorkspaceStatus || context.parameters.showPaletteStatus;
 
-  return createElement(FixtureProviders, {
-    ...fixture,
-    children: createElement(
-      'div',
-      { style: { padding: 24 } },
-      createElement(PaletteLauncher),
-      context.parameters.showWorkspaceStatus ? createElement(WorkspaceStatus) : null,
-      context.parameters.showPaletteStatus ? createElement(PaletteStatus) : null,
-      createElement(Story),
-    ),
-    key: `${context.id}:${fixture.isOpen}:${fixture.query}:${fixture.activeIndex}`,
-  });
+  return (
+    <FixtureProviders
+      key={`${context.id}:${fixture.isOpen}:${fixture.query}:${fixture.activeIndex}`}
+      {...fixture}
+    >
+      <div className={styles.fixture}>
+        <PaletteLauncher />
+        {showStatus && (
+          <aside className={styles['fixture__panel']} aria-label="Story fixture state">
+            <strong>Story fixture state</strong>
+            <p className={styles['fixture__hint']}>
+              Test readout — not part of the command palette.
+            </p>
+            {context.parameters.showWorkspaceStatus && <WorkspaceStatus />}
+            {context.parameters.showPaletteStatus && <PaletteStatus />}
+          </aside>
+        )}
+        <Story />
+      </div>
+    </FixtureProviders>
+  );
 }

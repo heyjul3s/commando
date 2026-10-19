@@ -1,5 +1,5 @@
 import { CommandPalette } from '../command-palette';
-import { commandPaletteFixtures, withCommandPaletteFixture } from './command-stories.fixtures';
+import { commandPaletteFixtures, withCommandPaletteFixture } from './command-palette.fixtures';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 

@@ -1,0 +1,57 @@
+.fixture {
+  box-sizing: border-box;
+  max-width: 460px;
+  padding: 24px;
+}
+
+.fixture__launcher {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 8px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 10px 16px;
+}
+
+.fixture__launcher:hover {
+  background: var(--color-surface-hover);
+}
+
+.fixture__launcher:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.fixture__panel {
+  background: var(--color-surface-muted);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: 8px;
+  color: var(--color-text-secondary);
+  font-size: 0.813rem;
+  margin-top: 20px;
+  padding: 16px;
+}
+
+.fixture__hint {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  margin: 6px 0 16px;
+}
+
+.fixture__readout {
+  display: grid;
+  gap: 8px 16px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.fixture__readout dd {
+  color: var(--color-text-primary);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
