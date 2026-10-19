@@ -16,7 +16,11 @@ export function getAppLocators(page: Page) {
 
   function selectedCommand(name: CommandName) {
     const selector = APP_SELECTORS.commandOptions[name];
-    return roleBy(selectedRegion, { ...selector, role: 'heading' });
+
+    return roleBy(selectedRegion, {
+      ...selector,
+      role: 'heading',
+    });
   }
 
   function recentCommand(name: CommandName) {
