@@ -1,0 +1,67 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as Stories from './available-commands.stories';
+import * as Interactions from './available-commands.interactions.stories';
+
+<Meta title="Features/Command Palette/Available Commands" />
+
+# Available commands
+
+Displays commands grouped by category. The component reads the shared palette
+query and active index through its colocated `useAvailableCommands` hook.
+
+## Visual states
+
+An empty query displays the complete command catalogue. Matching ignores case and
+surrounding whitespace and searches both labels and group names.
+
+- Default: the full catalogue with the first command highlighted.
+- Filtered: commands matching the query `documentation`.
+- Empty: no matches for `no matching command`.
+- Highlighted: the full catalogue with the second command highlighted.
+
+<Canvas of={Stories.Default} />
+<Canvas of={Stories.Filtered} />
+<Canvas of={Stories.Empty} />
+<Canvas of={Stories.Highlighted} />
+
+## Interaction
+
+Hovering changes the highlighted command, not the last chosen command. Clicking updates the workspace selection and
+recent history, then closes the palette. This standalone example keeps the list
+mounted so the state changes remain visible underneath it.
+
+<Canvas of={Interactions.Hover} />
+
+The Hover example reports only the highlighted command. It does not report the
+workspace selection or open/closed status, because neither changes on hover.
+The assertions check the option highlight and the store-backed highlighted label;
+the selection and palette-status observers are absent from this story.
+
+<Canvas of={Interactions.Select} />
+
+The Select interaction checks that the palette starts open, hovers the Projects
+command, then clicks it and asserts its selected label and the Closed status.
+Recent history is updated by the production action but is not asserted by this story.
+Both interactions use named steps and local constants for accessible names and
+the selection attribute.
+
+Arrow navigation and Enter selection belong to the search input. They share the
+same active index and filtered command order as this list. Escape belongs to the
+palette keyboard hook. The assembled palette stories verify keyboard selection.
+
+## Story organisation
+
+- `available-commands.stories.tsx`: representative visual states.
+- `available-commands.interactions.stories.tsx`: executable interaction scenarios.
+- `available-commands.interactions.ts`: named play functions and assertions.
+- `available-commands.fixtures.ts`: initial state and isolated provider setup.
+
+Each example creates fresh stores using production actions. Workspace persistence
+uses isolated memory storage so the examples neither depend on nor modify saved browser history.
+
+## Background and theme
+
+In the application, the palette shell supplies `--color-surface-raised`. Isolated
+list stories should reproduce that background; most rows are transparent. Theme
+selection changes the token values, while the story surface determines which
+background is actually painted. Inspect both when reviewing contrast.

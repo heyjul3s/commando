@@ -12,7 +12,7 @@ export function useAvailableCommands() {
   const activeIndex = palette.use.activeIndex();
   const query = palette.use.query();
 
-  const { setActiveIndex, closeCommandPalette } = palette.use.actions();
+  const { closeCommandPalette, setActiveIndex } = palette.use.actions();
   const { setSelectedCommand } = workspace.use.actions();
 
   const derived = useMemo(() => getAvailableCommands(COMMANDS, query), [query]);
@@ -34,12 +34,12 @@ export function useAvailableCommands() {
       selectCommand(command);
     };
 
-    return { onMouseEnter: handleMouseEnter, onClick: handleClick };
+    return { onClick: handleClick, onMouseEnter: handleMouseEnter };
   };
 
   return {
-    state: { activeIndex },
     actions: { getCommandHandlers },
     derived,
+    state: { activeIndex },
   };
 }
