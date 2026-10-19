@@ -3,6 +3,7 @@ import { SearchBar } from '../search-bar';
 import {
   searchBarFixtures,
   withCommandPaletteProvider,
+  withSearchBarSurface,
   withStoreStatus,
   withExternalQueryControl,
 } from './search-bar.fixtures';
@@ -28,7 +29,12 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   component: SearchBar,
-  decorators: [withStoreStatus, withCommandPaletteProvider],
+  decorators: [
+    withSearchBarSurface,
+    withExternalQueryControl,
+    withStoreStatus,
+    withCommandPaletteProvider,
+  ],
   parameters: { layout: 'centered' },
   title: 'Features/Command Palette/Search Bar/Interactions',
 } satisfies Meta<typeof SearchBar>;
@@ -53,12 +59,16 @@ export const EditExistingQuery: Story = {
 };
 
 export const ClearQuery: Story = {
-  parameters: { searchBarFixture: searchBarFixtures.highlighted },
+  parameters: {
+    searchBarFixture: searchBarFixtures.highlighted,
+  },
   play: clearQuery,
 };
 
 export const ExternalStoreUpdate: Story = {
-  decorators: [withExternalQueryControl],
+  parameters: {
+    showExternalQueryControl: true,
+  },
   play: externalStoreUpdate,
 };
 
@@ -97,7 +107,9 @@ export const ClearWithKeyboard: Story = {
 // -----------------------------------------------------------------------------
 
 export const PreventKeyboardDefaults: Story = {
-  parameters: { searchBarFixture: searchBarFixtures.empty },
+  parameters: {
+    searchBarFixture: searchBarFixtures.empty,
+  },
   play: preventKeyboardDefaults,
 };
 

@@ -1,10 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { searchBarFixtures, withCommandPaletteProvider } from './search-bar.fixtures';
+import {
+  searchBarFixtures,
+  withCommandPaletteProvider,
+  withSearchBarSurface,
+} from './search-bar.fixtures';
 import { SearchBar } from '../search-bar';
 
 const meta = {
   component: SearchBar,
-  decorators: [withCommandPaletteProvider],
+  decorators: [withSearchBarSurface, withCommandPaletteProvider],
   parameters: {
     layout: 'centered',
   },

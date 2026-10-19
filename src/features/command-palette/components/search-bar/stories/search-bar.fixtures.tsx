@@ -1,4 +1,4 @@
-import { createElement, useState } from 'react';
+import { createElement, useId, useState } from 'react';
 import { createStore } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { createStoreSelectors } from '../../../../../shared/store/create-selectors';
@@ -75,7 +75,20 @@ function StoreStatus() {
   const recentIds = workspace.use.recentCommandIds();
 
   return (
-    <div>
+    <aside
+      aria-label="Story fixture state"
+      style={{
+        background: 'var(--color-surface-muted)',
+        border: '1px dashed var(--color-border-strong)',
+        borderRadius: 8,
+        color: 'var(--color-text-secondary)',
+        fontSize: '0.813rem',
+        marginTop: '1rem',
+        padding: '1rem',
+      }}
+    >
+      <strong>Story fixture state</strong>
+      <p>Test readout — not part of the SearchBar component.</p>
       <p>
         Query: <output aria-label="Stored query">{query}</output>
       </p>
@@ -91,17 +104,49 @@ function StoreStatus() {
       <p>
         History: <output aria-label="Recent command IDs">{recentIds.join(', ')}</output>
       </p>
-    </div>
+    </aside>
   );
 }
 
 function ExternalQueryControl() {
   const palette = useCommandPaletteStore();
+  const hintId = useId();
 
   return (
-    <button type="button" onClick={() => palette.getState().actions.setQuery(externalQuery)}>
-      Update query from store
-    </button>
+    <div style={{ marginTop: '1rem' }}>
+      <button
+        type="button"
+        aria-describedby={hintId}
+        onClick={() => palette.getState().actions.setQuery(externalQuery)}
+        style={{
+          background: 'var(--color-surface-raised)',
+          border: '1px solid var(--color-border-strong)',
+          borderRadius: 6,
+          color: 'var(--color-text-primary)',
+          cursor: 'pointer',
+          font: 'inherit',
+          fontSize: '0.813rem',
+          fontWeight: 600,
+          padding: '0.5rem 0.75rem',
+        }}
+      >
+        Update query from store
+      </button>
+      <p
+        id={hintId}
+        style={{
+          color: 'var(--color-text-muted)',
+          fontSize: '0.75rem',
+          lineHeight: 1.5,
+          margin: '0.5rem 0 0',
+        }}
+      >
+        This test button changes the shared store query to “{externalQuery}” without typing in the
+        search field. The story clicks it automatically, so that value may already be shown. To try
+        it yourself, type a different query above, then click the button to replace it with “
+        {externalQuery}”.
+      </p>
+    </div>
   );
 }
 
@@ -114,12 +159,31 @@ export function withStoreStatus(Story: PartialStoryFn<ReactRenderer>) {
   );
 }
 
-export function withExternalQueryControl(Story: PartialStoryFn<ReactRenderer>) {
+export function withExternalQueryControl(
+  Story: PartialStoryFn<ReactRenderer>,
+  context: StoryContext,
+) {
   return (
     <>
       <Story />
-      <ExternalQueryControl />
+      {context.parameters.showExternalQueryControl && <ExternalQueryControl />}
     </>
+  );
+}
+
+export function withSearchBarSurface(Story: PartialStoryFn<ReactRenderer>) {
+  return (
+    <div
+      style={{
+        background: 'var(--color-surface-raised)',
+        border: '1px solid var(--color-border-subtle)',
+        borderRadius: 8,
+        overflow: 'hidden',
+        padding: '1rem',
+      }}
+    >
+      <Story />
+    </div>
   );
 }
 
@@ -131,7 +195,7 @@ export function withCommandPaletteProvider(
 
   return (
     <FixtureProviders key={context.id} {...fixture}>
-      <div style={{ width: 360 }}>
+      <div style={{ maxWidth: '90vw', width: 360 }}>
         <Story />
       </div>
     </FixtureProviders>
