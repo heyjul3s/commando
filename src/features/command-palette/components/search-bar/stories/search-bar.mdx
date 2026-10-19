@@ -32,7 +32,8 @@ The component takes no props. It reads the palette provider nearest to it.
 
 The search bar needs palette and workspace providers: the query and navigation
 live in the palette store, while Enter updates workspace selection. Storybook's
-global preview supplies both; fixtures override the palette provider.
+global preview supplies both; fixtures override both with isolated stores and
+in-memory workspace persistence.
 
 <Source
   language="tsx"
@@ -67,9 +68,39 @@ assert the controlled input value after typing, clearing, or replacing text.
 The clear interaction clicks the clear button and checks that focus returns to
 the input and the clear button disappears.
 
+<Canvas of={Interactions.InitialFocus} />
 <Canvas of={Interactions.CreateNewQuery} />
-<Canvas of={Interactions.ClearNewQuery} />
+<Canvas of={Interactions.ClearQuery} />
 <Canvas of={Interactions.EditExistingQuery} />
+<Canvas of={Interactions.ExternalStoreUpdate} />
+
+Interaction fixtures expose store-backed query, highlight, open state, selection,
+and history outputs. Clear Query starts with existing text and a nonzero
+highlight, then verifies both reset without closing. External Store Update uses
+a fixture control to demonstrate that the input follows changes from elsewhere.
+
+Keyboard stories cover wrapping navigation, selection from filtered results,
+empty results, and activating Clear search with Enter. The isolated search bar
+stays mounted after Enter closes its store; dialog dismissal is covered by the
+assembled palette stories.
+
+<Canvas of={Interactions.KeyboardNavigation} />
+<Canvas of={Interactions.KeyboardSelection} />
+<Canvas of={Interactions.EmptyResultsKeyboard} />
+<Canvas of={Interactions.ClearWithKeyboard} />
+
+Event-guard stories dispatch synthetic native keyboard events to inspect
+`defaultPrevented`, already-handled events, and IME composition. Separate stories
+verify that closed-state and unrelated keys leave the store unchanged. These
+checks also live in Storybook; there are no separate search-bar unit-test files.
+The closed-store fixture intentionally keeps the isolated search input mounted,
+so it can exercise the guard; the assembled palette hides the input when closed.
+
+<Canvas of={Interactions.PreventKeyboardDefaults} />
+<Canvas of={Interactions.IgnorePreventedEvents} />
+<Canvas of={Interactions.IgnoreCompositionEvents} />
+<Canvas of={Interactions.IgnoreClosedPaletteKeys} />
+<Canvas of={Interactions.IgnoreUnrelatedKeys} />
 
 ## Story organisation
 
