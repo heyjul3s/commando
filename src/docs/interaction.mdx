@@ -1,0 +1,135 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Interaction" />
+
+# Interaction
+
+The interface distinguishes a command being **highlighted** from one being
+**chosen**. This distinction matters when reading both the workspace and the
+interaction stories.
+
+## State vocabulary
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Term</th>
+      <th scope="col">Meaning</th>
+      <th scope="col">Owner</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Open</td>
+      <td>The palette dialog is visible</td>
+      <td>
+        Palette store: <code>isOpen</code>
+      </td>
+    </tr>
+    <tr>
+      <td>Query</td>
+      <td>Text used to filter the catalogue</td>
+      <td>
+        Palette store: <code>query</code>
+      </td>
+    </tr>
+    <tr>
+      <td>Highlighted</td>
+      <td>Current candidate in the displayed result order</td>
+      <td>
+        Palette store: <code>activeIndex</code>
+      </td>
+    </tr>
+    <tr>
+      <td>Selected</td>
+      <td>Last command chosen for the workspace demo</td>
+      <td>
+        Workspace store: <code>selectedCommand</code>
+      </td>
+    </tr>
+    <tr>
+      <td>Recent</td>
+      <td>Unique command IDs ordered by most recent choice</td>
+      <td>
+        Workspace store: <code>recentCommandIds</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+The demo records a chosen command; it does not perform the navigation or external
+action described by every command label.
+
+## Current flows
+
+1. The workspace header opens the palette. The application also registers
+   Command+K and Control+K to toggle its open state.
+2. Mounting the search bar schedules focus on its input. Typing updates the shared
+   query and resets the active index to zero when the query changes.
+3. The list filters labels and group names, then groups the matches. Matching
+   ignores case and surrounding whitespace.
+4. Hover changes the highlighted index. It does not change the workspace's selected command.
+5. Clicking a command updates workspace selection and recent history, then calls
+   the palette's `closeCommandPalette` action.
+6. The mounted palette lifecycle hook clears query and resets highlighting after
+   the palette closes. The close store action itself changes only open state.
+
+Clearing recent history leaves the selected command visible. Closing the palette
+does not clear the workspace or its history.
+
+## Keyboard scope
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Input</th>
+      <th scope="col">Current implementation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Command+K / Control+K</td>
+      <td>Application-level toggle shortcut</td>
+    </tr>
+    <tr>
+      <td>Escape</td>
+      <td>Palette keyboard hook closes the open palette and ignores IME composition</td>
+    </tr>
+    <tr>
+      <td>Tab / Shift+Tab</td>
+      <td>Native focus navigation; modal containment is not implemented yet</td>
+    </tr>
+    <tr>
+      <td>Enter / Space on a command button</td>
+      <td>Native button activation invokes its click handler</td>
+    </tr>
+    <tr>
+      <td>Arrow keys and Enter in search</td>
+      <td>Custom navigation/selection is currently commented out during the keyboard refactor</td>
+    </tr>
+  </tbody>
+</table>
+
+The intended boundary is input-specific navigation on the search input and
+palette-wide dismissal on the dialog. Treat that as refactoring direction, not a
+claim that the redistribution is already complete. While composing text with an
+input method, confirmation and candidate-navigation keys must remain available
+to the input method.
+
+## What belongs in a story
+
+A visual state story establishes initial state without requiring a workflow.
+An interaction story explains one transition, performs it, and asserts an
+observable result. The Hover story reports the highlighted command; the Select
+story reports workspace selection and whether the palette closed.
+
+Use named play functions when the workflow would obscure the story declaration.
+Keep reusable fixture data and provider setup beside the stories. Give each story
+fresh stores and control persistence when testing a precise history scenario.
+
+## Review the whole flow
+
+Check pointer and keyboard routes separately. A window-dispatched key test cannot
+prove that a focused button retains its native behaviour. Review focus location,
+composition input, empty results, repeated activation, and close/reopen behaviour
+in the assembled palette as well as isolated component stories.

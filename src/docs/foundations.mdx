@@ -1,0 +1,105 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Overview" />
+
+# Foundations
+
+Commando is a command-palette showcase: a searchable command catalogue sits above a
+workspace that displays the last chosen command and recent history. This Storybook
+explains the visual language, component states, and the way the two features cooperate.
+
+## Where to start
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Page</th>
+      <th scope="col">What it explains</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <a href="?path=/docs/documentation-design-tokens--docs">Design tokens</a>
+      </td>
+      <td>Semantic colours, surfaces, shadows, and theme boundaries</td>
+    </tr>
+    <tr>
+      <td>
+        <a href="?path=/docs/documentation-interaction--docs">Interaction</a>
+      </td>
+      <td>Highlighting, selection, closing, and state ownership</td>
+    </tr>
+    <tr>
+      <td>
+        <a href="?path=/docs/documentation-accessibility--docs">Accessibility</a>
+      </td>
+      <td>Review expectations, automated checks, and current gaps</td>
+    </tr>
+    <tr>
+      <td>
+        <a href="?path=/docs/features-command-palette-overview--docs">Command palette</a>
+      </td>
+      <td>Search, results, providers, and lifecycle composition</td>
+    </tr>
+    <tr>
+      <td>
+        <a href="?path=/docs/features-workspace-preview-overview--docs">Workspace preview</a>
+      </td>
+      <td>Selected-command display and persisted recent history</td>
+    </tr>
+  </tbody>
+</table>
+
+## Visual language
+
+Use quiet, neutral surfaces to separate the workspace from the raised command
+palette. Orange brand colours provide emphasis; semantic tokens decide where that
+emphasis belongs. A command's label remains the primary information, with its icon
+and group label helping recognition and scanning.
+
+A highlight identifies the current candidate. It does not mean that the user has
+executed or chosen that command. Keep that distinction visible in examples and status text.
+
+## Typography and layout
+
+The global font stack starts with Inter and falls back to platform sans-serif
+fonts. The repository does not currently bundle an Inter font file, so rendering
+can differ between machines. Component styles define sizes, spacing, and radii
+locally; there is not yet a shared typography or spacing token scale.
+
+Use existing component patterns when extending the interface. Introduce a shared
+scale when there is a deliberate design decision behind it, rather than treating
+repeated numeric values as an established system.
+
+## Components and ownership
+
+```text
+src/
+  app/                        Application composition and providers
+  features/
+    command-palette/
+      components/             Components with colocated hooks, styles, and tests
+      store/                  Shared palette state and actions
+      utils/                  Filtering and grouping
+    workspace-preview/
+      components/
+      store/
+  shared/                     Constants and general utilities
+  docs/                       Cross-feature Storybook documentation
+```
+
+A component's primary hook owns its subscriptions and UI behaviour. Supporting
+hooks stay with the component that composes them. Shared feature state lives in a
+feature store; calculations that have no React dependency live in utilities.
+
+## Reading this Storybook
+
+**States** show representative appearances. **Interactions** demonstrate a specific
+workflow and include executable assertions. Feature overview pages explain how
+components cooperate. Component documentation stays beside its stories.
+
+The preview imports the application's global styles and wraps stories in
+`AppProviders`. A story can add a nearer provider for controlled initial state.
+Theme tokens and the component's surrounding surface are separate requirements:
+a themed component can still be shown on the wrong background.
