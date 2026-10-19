@@ -9,7 +9,8 @@ import { workspacePreviewDefaultValues } from '../../../../workspace-preview/sto
 import { useWorkspacePreviewStore } from '../../../../workspace-preview/store';
 
 import type { PropsWithChildren } from 'react';
-import type { Decorator, StoryContext } from '@storybook/react-vite';
+import type { ReactRenderer, StoryContext } from '@storybook/react-vite';
+import type { PartialStoryFn } from 'storybook/internal/types';
 import type { WorkspacePreviewStore } from '../../../../workspace-preview/store/workspace-preview-provider';
 
 export const commandPaletteFixtures = {
@@ -70,6 +71,21 @@ function WorkspaceStatus() {
   );
 }
 
+function PaletteStatus() {
+  const palette = useCommandPaletteStore();
+  const query = palette.use.query();
+  const activeIndex = palette.use.activeIndex();
+  const isOpen = palette.use.isOpen();
+
+  return createElement(
+    'div',
+    null,
+    createElement('output', { 'aria-label': 'Stored query' }, query),
+    createElement('output', { 'aria-label': 'Active index' }, activeIndex),
+    createElement('output', { 'aria-label': 'Palette status' }, isOpen ? 'Open' : 'Closed'),
+  );
+}
+
 function PaletteLauncher() {
   const palette = useCommandPaletteStore();
 
@@ -83,7 +99,10 @@ function PaletteLauncher() {
   );
 }
 
-export function withCommandPaletteFixture(Story: Parameters<Decorator>[0], context: StoryContext) {
+export function withCommandPaletteFixture(
+  Story: PartialStoryFn<ReactRenderer>,
+  context: StoryContext,
+) {
   const fixture: Fixture =
     context.parameters.commandPaletteFixture ?? commandPaletteFixtures.default;
 
@@ -94,6 +113,7 @@ export function withCommandPaletteFixture(Story: Parameters<Decorator>[0], conte
       { style: { padding: 24 } },
       createElement(PaletteLauncher),
       context.parameters.showWorkspaceStatus ? createElement(WorkspaceStatus) : null,
+      context.parameters.showPaletteStatus ? createElement(PaletteStatus) : null,
       createElement(Story),
     ),
     key: `${context.id}:${fixture.isOpen}:${fixture.query}:${fixture.activeIndex}`,

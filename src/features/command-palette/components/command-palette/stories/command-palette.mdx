@@ -31,6 +31,7 @@ fullscreen canvas supplies room for the fixed overlay.
 
 These scenarios exercise the assembled components. Detailed input editing and
 individual hover behaviour remain covered by the child component stories.
+These stories replace the separate `command-palette.test.tsx` component test.
 Each play function uses named steps and local constants for accessible names and
 interaction values.
 
@@ -62,6 +63,8 @@ that dialog height stays consistent across full and empty results.
 
 The header's close button dismisses the dialog. Closing and reopening after a
 query and hover resets the query and active highlight and focuses the input.
+Store-backed outputs verify that open state, query, and highlight reset immediately
+after dismissal, before reopening.
 Escape from the input and clicking the backdrop also dismiss the dialog;
 clicking inside it keeps it open.
 

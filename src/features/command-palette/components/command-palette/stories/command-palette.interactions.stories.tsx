@@ -41,6 +41,9 @@ export const Close: Story = {
 };
 
 export const CloseAndReopen: Story = {
+  parameters: {
+    showPaletteStatus: true,
+  },
   play: closeAndReopen,
 };
 
@@ -53,6 +56,8 @@ export const Backdrop: Story = {
 };
 
 export const KeyboardSelection: Story = {
-  parameters: { showWorkspaceStatus: true },
+  parameters: {
+    showWorkspaceStatus: true,
+  },
   play: keyboardSelection,
 };

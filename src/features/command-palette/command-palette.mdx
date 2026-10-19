@@ -1,0 +1,180 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as ResultStates from './components/available-commands/stories/available-commands.stories';
+
+<Meta title="Features/Command Palette/Overview" />
+
+# Command palette
+
+The command palette brings query input and grouped results into one modal
+surface. It uses the fixed `COMMANDS` catalogue from `src/shared/constants` and
+coordinates a choice with the workspace-preview store.
+
+## Composition
+
+```text
+CommandPalette
+  useCommandPalette
+    useCommandPaletteLifecycle
+    useCommandPaletteKeyboard
+  SearchBar
+    useSearchBar
+  AvailableCommands
+    useAvailableCommands
+```
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Piece</th>
+      <th scope="col">Responsibility</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>CommandPalette</code>
+      </td>
+      <td>Visibility, dialog surface, backdrop dismissal, and child composition</td>
+    </tr>
+    <tr>
+      <td>
+        <code>useCommandPalette</code>
+      </td>
+      <td>Open-state subscription, dialog handlers, and supporting hook composition</td>
+    </tr>
+    <tr>
+      <td>
+        <code>SearchBar</code> / <code>useSearchBar</code>
+      </td>
+      <td>Query editing, query subscription, input focus, and close control</td>
+    </tr>
+    <tr>
+      <td>
+        <code>AvailableCommands</code> / <code>useAvailableCommands</code>
+      </td>
+      <td>Result data, active-index subscription, hover, and click selection</td>
+    </tr>
+    <tr>
+      <td>
+        <code>getAvailableCommands</code>
+      </td>
+      <td>Case-insensitive filtering, grouping, and a consistent displayed command order</td>
+    </tr>
+    <tr>
+      <td>Lifecycle hook</td>
+      <td>Reset query and active index while the palette is closed</td>
+    </tr>
+    <tr>
+      <td>Keyboard hook</td>
+      <td>Currently Escape dismissal; search navigation is being redistributed</td>
+    </tr>
+  </tbody>
+</table>
+
+Each component is colocated with its primary hook, CSS module, and tests. Stories
+can live in a component's `stories/` folder when several states and workflows
+need separate files.
+
+## Store contract
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Value</th>
+      <th scope="col">Initial state</th>
+      <th scope="col">Lifetime</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>isOpen</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
+      <td>Palette provider mount</td>
+    </tr>
+    <tr>
+      <td>
+        <code>query</code>
+      </td>
+      <td>Empty string</td>
+      <td>Shared across input and result list; cleared by the mounted lifecycle on close</td>
+    </tr>
+    <tr>
+      <td>
+        <code>activeIndex</code>
+      </td>
+      <td>
+        <code>0</code>
+      </td>
+      <td>Display-order index; reset when query changes and on close</td>
+    </tr>
+  </tbody>
+</table>
+
+`setQuery` updates query and resets the active index together. Setting the same
+query leaves the state unchanged. `closeCommandPalette` is the named store action
+used for dismissal; it changes open state, while lifecycle cleanup remains in React.
+Palette state is not persisted.
+
+To choose a command, the list updates the workspace store's selection/history
+and then closes the palette. Highlighting a row alone does neither. These command
+labels are demo choices, not integrations that actually open projects, navigate,
+or perform external actions.
+
+## Filtering and display order
+
+The utility trims and lowercases the query, then searches each command's label
+and group. An empty query includes the whole catalogue. Groups follow first-match
+order, and commands retain their order within each group. The flattened result
+uses that same group order so index-based behaviour can match the rendered list.
+
+<Canvas of={ResultStates.Filtered} />
+
+<Canvas of={ResultStates.Empty} />
+
+## Integration
+
+`CommandPalette` takes no props. Its hook consumers require both feature providers:
+
+```tsx
+import { AppProviders } from './app/providers';
+import { CommandPalette } from './features/command-palette';
+
+export function Example() {
+  return (
+    <AppProviders>
+      <CommandPalette />
+    </AppProviders>
+  );
+}
+```
+
+This alone starts closed. A trigger must call the palette store's
+`setIsOpen(true)`. The workspace header supplies that trigger in the app, and
+`useCommandPaletteShortcut` registers the global shortcut from beneath the providers.
+`App` already owns `AppProviders`; do not wrap it again solely to make its stores available.
+
+Storybook's preview supplies `AppProviders` globally. For a standalone open-palette
+story, add a nearer `CommandPaletteProvider` with `initialValues={{ isOpen: true }}`.
+Initial values initialise a store once; changing provider props is not a controlled
+state update. Remount the provider or invoke an action for a new scenario.
+
+## Surface and theme
+
+The palette shell paints `--color-surface-raised` and the backdrop uses
+`--color-overlay`. The command list deliberately leaves most row backgrounds
+transparent. Give isolated list stories the same surface before assessing
+contrast; a theme supplies token values but does not supply that container.
+
+## Current interaction boundaries
+
+Pointer selection, query filtering, close controls, and lifecycle reset are
+implemented. Arrow-key navigation and Enter selection are handled on the search
+input, while the palette keyboard hook handles Escape. Modal focus containment
+and restoration also remain unfinished. The
+[interaction guide](?path=/docs/documentation-interaction--docs) and
+[accessibility guide](?path=/docs/documentation-accessibility--docs) distinguish the
+current behaviour from the intended keyboard model.

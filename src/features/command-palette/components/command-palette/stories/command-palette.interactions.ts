@@ -15,6 +15,10 @@ const EMPTY_MESSAGE = 'No commands found';
 const UNMATCHED_QUERY = 'no matching command';
 const PROJECT_QUERY = 'projects';
 const SELECTED_ATTRIBUTE = 'aria-selected';
+const STORED_QUERY_NAME = 'Stored query';
+const ACTIVE_INDEX_NAME = 'Active index';
+const PALETTE_STATUS_NAME = 'Palette status';
+const NAVIGATION_QUERY = 'navigation';
 const projectCommand = COMMANDS.find((command) => command.id === 'projects')!;
 const firstCommand = COMMANDS[0];
 
@@ -76,6 +80,7 @@ export async function clearSearch({ canvas, step, userEvent }: StoryContext) {
     await expect(input).toHaveValue('');
     await expect(input).toHaveFocus();
     await expect(canvas.getAllByRole('option')).toHaveLength(COMMANDS.length);
+    await expect(canvas.getByRole('option', { name: firstCommand.label })).toBeVisible();
     await expect(canvas.queryByText(EMPTY_MESSAGE)).not.toBeInTheDocument();
     await expect(dialog).toBeVisible();
     await expect(dialog.getBoundingClientRect().height).toBeCloseTo(initialHeight, 0);
@@ -86,13 +91,26 @@ export async function closeAndReopen(context: StoryContext) {
   const { canvas, step, userEvent } = context;
 
   await step('Enter a query and highlight another command', async () => {
-    await userEvent.type(canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME }), 'navigation');
+    await userEvent.type(
+      canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME }),
+      NAVIGATION_QUERY,
+    );
     const command = canvas.getByRole('option', { name: projectCommand.label });
     await userEvent.hover(command);
     await expect(command).toHaveAttribute(SELECTED_ATTRIBUTE, 'true');
+    await expect(canvas.getByLabelText(STORED_QUERY_NAME)).toHaveTextContent(NAVIGATION_QUERY);
+    await expect(canvas.getByLabelText(ACTIVE_INDEX_NAME)).toHaveTextContent('1');
   });
 
   await closePalette(context);
+
+  await step('Closing resets store state before reopening', async () => {
+    await waitFor(async () => {
+      await expect(canvas.getByLabelText(PALETTE_STATUS_NAME)).toHaveTextContent('Closed');
+      await expect(canvas.getByLabelText(STORED_QUERY_NAME)).toBeEmptyDOMElement();
+      await expect(canvas.getByLabelText(ACTIVE_INDEX_NAME)).toHaveTextContent('0');
+    });
+  });
 
   await step('Reopening resets the query and highlight', async () => {
     await userEvent.click(canvas.getByRole('button', { name: OPEN_BUTTON_NAME }));
