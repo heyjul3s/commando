@@ -21,3 +21,43 @@
     padding-top: 18px;
   }
 }
+
+.command-palette__header {
+  align-items: center;
+  background: var(--color-surface-muted);
+  border-bottom: 1px solid var(--color-border-subtle);
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  min-height: 56px;
+  padding: 0 12px 0 18px;
+}
+
+.command-palette__title {
+  color: var(--color-text-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.command-palette__close-button {
+  background: var(--color-transparent);
+  border: 0;
+  border-radius: 8px;
+  color: var(--color-text-secondary);
+  display: grid;
+  height: 32px;
+  padding: 0;
+  place-items: center;
+  width: 32px;
+}
+
+.command-palette__close-button:hover {
+  background: var(--color-surface-hover);
+}
+
+.command-palette__close-button:focus-visible {
+  outline: 2px solid currentcolor;
+  outline-offset: 2px;
+}

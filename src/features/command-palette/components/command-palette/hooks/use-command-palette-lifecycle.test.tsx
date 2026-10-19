@@ -10,7 +10,7 @@ function setup(open: boolean) {
     },
     {
       wrapper: ({ children }) => (
-        <CommandPaletteProvider initialValues={{ isOpen: open, query: 'docs', activeIndex: 2 }}>
+        <CommandPaletteProvider initialValues={{ activeIndex: 2, isOpen: open, query: 'docs' }}>
           {children}
         </CommandPaletteProvider>
       ),
@@ -26,7 +26,7 @@ describe('use-command-palette-lifecycle', () => {
   });
 
   it('preserves search and selection while open', () => {
-    const { result, rerender } = setup(true);
+    const { rerender, result } = setup(true);
     rerender();
     expect(result.current.getState().query).toBe('docs');
     expect(result.current.getState().activeIndex).toBe(2);

@@ -4,7 +4,7 @@ import { useCommandPaletteStore } from '../../../store';
 export function useCommandPaletteLifecycle() {
   const palette = useCommandPaletteStore();
   const open = palette.use.isOpen();
-  const { setQuery, setActiveIndex } = palette.use.actions();
+  const { setActiveIndex, setQuery } = palette.use.actions();
 
   useEffect(() => {
     if (!open) {

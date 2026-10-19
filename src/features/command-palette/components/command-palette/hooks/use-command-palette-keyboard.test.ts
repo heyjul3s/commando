@@ -1,24 +1,22 @@
 import { act, renderHook } from '@testing-library/react';
-import { COMMANDS } from '../../../../../shared/constants';
 import { AppProviders } from '../../../../../app/providers/app-providers';
 import { useCommandPaletteStore } from '../../../store';
-import { useWorkspacePreviewStore } from '../../../../workspace-preview/store';
 import { useCommandPaletteKeyboard } from './use-command-palette-keyboard';
 
 function setup(open = true) {
   const hook = renderHook(
     () => {
       useCommandPaletteKeyboard();
-      return { palette: useCommandPaletteStore(), workspace: useWorkspacePreviewStore() };
+      return useCommandPaletteStore();
     },
     { wrapper: AppProviders },
   );
-  act(() => hook.result.current.palette.getState().actions.setIsOpen(open));
+  act(() => hook.result.current.getState().actions.setIsOpen(open));
   return hook;
 }
 
-function keydown(key: string) {
-  const event = new KeyboardEvent('keydown', { key, cancelable: true });
+function keydown(key: string, options: KeyboardEventInit = {}) {
+  const event = new KeyboardEvent('keydown', { cancelable: true, key, ...options });
   act(() => {
     window.dispatchEvent(event);
   });
@@ -26,67 +24,47 @@ function keydown(key: string) {
 }
 
 describe('use-command-palette-keyboard', () => {
-  beforeEach(() => localStorage.clear());
-
-  it('navigates and wraps selection in both directions', () => {
-    const { result } = setup();
-    expect(keydown('ArrowUp').defaultPrevented).toBe(true);
-    expect(result.current.palette.getState().activeIndex).toBe(COMMANDS.length - 1);
-    keydown('ArrowDown');
-    expect(result.current.palette.getState().activeIndex).toBe(0);
-    keydown('ArrowDown');
-    expect(result.current.palette.getState().activeIndex).toBe(1);
-  });
-
-  it('reads current query and selection without subscribing to them', () => {
-    const { result } = setup();
-    const previous = result.current;
-    act(() => {
-      result.current.palette.getState().actions.setQuery('settings');
-      result.current.palette.getState().actions.setActiveIndex(1);
-    });
-    expect(result.current).toBe(previous);
-    keydown('Enter');
-    expect(result.current.workspace.getState().selectedCommand.id).toBe('theme');
-    expect(result.current.workspace.getState().recentCommandIds).toEqual(['theme']);
-    expect(result.current.palette.getState().isOpen).toBe(false);
-  });
-
   it('closes on Escape', () => {
     const { result } = setup();
     keydown('Escape');
-    expect(result.current.palette.getState().isOpen).toBe(false);
+    expect(result.current.getState().isOpen).toBe(false);
   });
 
-  it('ignores keys while closed and responds after opening', () => {
-    const { result } = setup(false);
-    expect(keydown('ArrowDown').defaultPrevented).toBe(false);
-    expect(result.current.palette.getState().activeIndex).toBe(0);
-    act(() => result.current.palette.getState().actions.setIsOpen(true));
-    keydown('ArrowDown');
-    expect(result.current.palette.getState().activeIndex).toBe(1);
-    keydown('Escape');
-    expect(keydown('ArrowDown').defaultPrevented).toBe(false);
-  });
-
-  it('handles empty results without selecting or closing', () => {
+  it('ignores navigation and selection events dispatched outside the input', () => {
     const { result } = setup();
-    act(() => result.current.palette.getState().actions.setQuery('no matching command'));
-    keydown('ArrowDown');
-    keydown('ArrowUp');
-    keydown('Enter');
-    expect(result.current.palette.getState().activeIndex).toBe(0);
-    expect(result.current.palette.getState().isOpen).toBe(true);
-    expect(result.current.workspace.getState().recentCommandIds).toEqual([]);
+    for (const key of ['ArrowDown', 'ArrowUp', 'Enter']) {
+      expect(keydown(key).defaultPrevented).toBe(false);
+    }
+    expect(result.current.getState().activeIndex).toBe(0);
+    expect(result.current.getState().isOpen).toBe(true);
+  });
+
+  it('ignores Escape during composition and when already handled', () => {
+    const { result } = setup();
+    keydown('Escape', { isComposing: true });
+    expect(result.current.getState().isOpen).toBe(true);
+    const event = new KeyboardEvent('keydown', { cancelable: true, key: 'Escape' });
+    event.preventDefault();
+    act(() => {
+      window.dispatchEvent(event);
+    });
+    expect(result.current.getState().isOpen).toBe(true);
+  });
+
+  it('ignores Escape while closed and responds after reopening', () => {
+    const { result } = setup(false);
+    keydown('Escape');
+    expect(result.current.getState().isOpen).toBe(false);
+    act(() => result.current.getState().actions.setIsOpen(true));
+    keydown('Escape');
+    expect(result.current.getState().isOpen).toBe(false);
   });
 
   it('removes the listener when unmounted', () => {
     const { result, unmount } = setup();
-    const palette = result.current.palette;
+    const palette = result.current;
     unmount();
     keydown('Escape');
-    keydown('ArrowDown');
     expect(palette.getState().isOpen).toBe(true);
-    expect(palette.getState().activeIndex).toBe(0);
   });
 });

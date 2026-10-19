@@ -16,10 +16,10 @@ export function useCommandPalette() {
   useCommandPaletteKeyboard();
 
   return {
-    state: { isOpen },
     actions: {
       onCloseCommandPalette: closeCommandPalette,
       onDialogMouseDown: handleDialogMouseDown,
     },
+    state: { isOpen },
   };
 }

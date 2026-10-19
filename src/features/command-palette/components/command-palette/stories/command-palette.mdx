@@ -1,0 +1,95 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as Stories from './command-palette.stories';
+import * as Interactions from './command-palette.interactions.stories';
+
+<Meta title="Features/Command Palette/Command-Palette/Overview" />
+
+# Command palette dialog
+
+The assembled dialog combines Search Bar and Available Commands with a titled
+header, close control, and backdrop. Its hook owns visibility, lifecycle resets,
+and Escape handling. The search bar owns query editing and clearing; the list
+owns filtering, highlighting, and pointer selection.
+
+## Visual states
+
+Every story creates a fresh palette store and a workspace store with in-memory
+persistence. Selecting a command cannot change saved browser history. The
+fullscreen canvas supplies room for the fixed overlay.
+
+- Default: an open palette with the full catalogue and first command highlighted.
+- Filtered: an open palette searching for `documentation`.
+- Empty: an open palette with no matches for `no matching command`.
+- Closed: no dialog; the fixture's Open command palette button opens it.
+
+<Canvas of={Stories.Default} />
+<Canvas of={Stories.Filtered} />
+<Canvas of={Stories.Empty} />
+<Canvas of={Stories.Closed} />
+
+## Full-flow interactions
+
+These scenarios exercise the assembled components. Detailed input editing and
+individual hover behaviour remain covered by the child component stories.
+Each play function uses named steps and local constants for accessible names and
+interaction values.
+
+### Search and select
+
+Open the palette through the fixture's launcher, search for Projects, and verify
+that only the matching command remains. Selecting it updates the store-backed
+workspace selection and recent-command output, then dismisses the dialog.
+
+<Canvas of={Interactions.SearchAndSelect} />
+
+### Keyboard selection
+
+Arrow keys wrap through filtered results while focus remains in the search input.
+Enter selects the active result, updates workspace selection and history, and
+closes the dialog.
+
+<Canvas of={Interactions.KeyboardSelection} />
+
+### Empty results and clearing
+
+Enter an unmatched query, then click Clear search. The full catalogue returns,
+focus stays in the input, and the dialog remains open. The interaction checks
+that dialog height stays consistent across full and empty results.
+
+<Canvas of={Interactions.ClearSearch} />
+
+### Dismissal and reopening
+
+The header's close button dismisses the dialog. Closing and reopening after a
+query and hover resets the query and active highlight and focuses the input.
+Escape from the input and clicking the backdrop also dismiss the dialog;
+clicking inside it keeps it open.
+
+<Canvas of={Interactions.Close} />
+<Canvas of={Interactions.CloseAndReopen} />
+<Canvas of={Interactions.Escape} />
+<Canvas of={Interactions.Backdrop} />
+
+The lifecycle hook clears the query and resets highlighting while closed. The
+close action itself only changes open state. Workspace selection and history
+survive dismissal.
+
+## Story organisation
+
+- `command-palette.stories.tsx`: representative visual states.
+- `command-palette.interactions.stories.tsx`: full-flow scenarios.
+- `command-palette.interactions.ts`: play functions, named steps, and assertions.
+- `command-stories.fixtures.ts`: initial state, isolated stores, launcher, and workspace observers.
+
+## Surface and accessibility
+
+The header displays Search Commands and labels the dialog through its heading.
+The top-right X is named Close command palette; the separate SearchX control is
+named Clear search. Results use a consistent viewport-aware height and scroll
+when needed.
+
+Focus containment, background inertness, and focus restoration to the opening
+control are not implemented. Arrow navigation and Enter selection are handled
+on the search input; Escape is handled by the palette hook. Application-level
+Command+K and Control+K shortcuts belong to application tests; the fixture
+launcher calls the palette store directly.
