@@ -1,0 +1,93 @@
+import { Canvas, Meta, Source } from '@storybook/addon-docs/blocks';
+import * as Stories from './search-bar.stories';
+import * as Interactions from './search-bar.interactions.stories';
+
+<Meta title="Features/Command Palette/Search Bar/Overview" />
+
+# Search bar
+
+The search bar edits the palette query and provides an inline Clear search control.
+The parent command palette owns the separate Close modal button at its top right.
+It does not filter or render results itself: the Available Commands component
+subscribes to the same query and derives the visible list.
+
+## Responsibilities
+
+`SearchBar` renders the input and icons. Its primary hook, `useSearchBar`, owns the
+query subscription, change and clear handlers, and input ref. The hook schedules
+focus when the component mounts and cancels the pending timer on unmount.
+
+The component takes no props. It reads the palette provider nearest to it.
+
+## State and behaviour
+
+- The input displays the palette store's `query`, including changes made elsewhere.
+- Typing calls `setQuery`. A changed query also resets `activeIndex` to zero in the same store update.
+- The input preserves the user's text. Trimming and case normalisation happen in the result-filtering utility.
+- Clear search appears only for a nonempty query. It clears the query, resets the active index, and returns focus to the input without closing the palette.
+  Clearing keeps the palette open. Closing and lifecycle reset behaviour are covered
+  by the assembled command palette, which owns visibility.
+
+## Integration
+
+The search bar needs palette and workspace providers: the query and navigation
+live in the palette store, while Enter updates workspace selection. Storybook's
+global preview supplies both; fixtures override the palette provider.
+
+<Source
+  language="tsx"
+  code={`<WorkspacePreviewProvider>
+<CommandPaletteProvider initialValues={{ isOpen: true, query: 'projects' }}>
+  <SearchBar />
+</CommandPaletteProvider>
+</WorkspacePreviewProvider>`}
+/>
+
+The application renders the search bar inside the raised palette surface. Use
+that surface around standalone examples rather than assuming that a theme will
+paint the component's background.
+
+## Visual states
+
+- Default: the query is empty and the placeholder is visible.
+- Existing query: text comes from the store, not a component prop.
+- Long query: text exceeds the fixture's 360px-wide wrapper.
+
+<Canvas of={Stories.Default} />
+<Canvas of={Stories.ExistingQuery} />
+<Canvas of={Stories.LongQuery} />
+
+Closed palette is not a separate search-bar visual state. Test dialog visibility
+and lifecycle resets with the assembled palette.
+
+## Interactions
+
+Named steps group setup and actions with their expected outcomes. Query stories
+assert the controlled input value after typing, clearing, or replacing text.
+The clear interaction clicks the clear button and checks that focus returns to
+the input and the clear button disappears.
+
+<Canvas of={Interactions.CreateNewQuery} />
+<Canvas of={Interactions.ClearNewQuery} />
+<Canvas of={Interactions.EditExistingQuery} />
+
+## Story organisation
+
+- `search-bar.stories.tsx`: Default, Existing Query, and Long Query visual states.
+- `search-bar.interactions.stories.tsx`: executable interaction scenarios.
+- `search-bar.interactions.ts`: named play functions, steps, and local constants.
+- `search-bar.fixtures.tsx`: query fixtures and an isolated palette provider.
+
+## Keyboard and accessibility
+
+The input is named “Search commands”. The SearchX clear button is named “Clear search”. The search and clear icons
+are decorative.
+
+ArrowUp and ArrowDown wrap the active highlight through the current filtered
+results. Enter selects that result, records it in workspace history, and closes
+the palette. These handlers run only on the search input while the palette is
+open and ignore IME composition. Empty results do not select or close anything.
+Escape comes from the mounted palette keyboard hook, not an isolated search bar.
+
+See [Interaction](?path=/docs/documentation-interaction--docs) for event ownership and
+[Accessibility](?path=/docs/documentation-accessibility--docs) for focus and input-method review.

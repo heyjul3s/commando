@@ -1,31 +1,35 @@
 import { useSearchBar } from './use-search-bar';
-import { Search, X } from 'lucide-react';
+import { Search, SearchX } from 'lucide-react';
 import styles from './search-bar.module.css';
 
 export function SearchBar() {
-  const { state, actions, refs } = useSearchBar();
+  const { actions, refs, state } = useSearchBar();
 
   return (
     <div className={styles['search-bar']}>
-      <Search size={18} aria-hidden="true" />
+      <Search className={styles['search-bar__icon']} size={18} aria-hidden="true" />
 
       <input
         className={styles['search-bar__input']}
         ref={refs.inputRef}
         value={state.query}
         onChange={actions.onQueryChange}
+        onKeyDown={actions.onQueryKeyDown}
         placeholder="Search commands..."
         aria-label="Search commands"
       />
 
-      <button
-        className={styles['search-bar__close-button']}
-        type="button"
-        onClick={actions.onCloseCommandPalette}
-      >
-        <X size={17} aria-hidden="true" />
-        <span className={styles['search-bar__sr-only']}>Close command palette</span>
-      </button>
+      {state.query !== '' && (
+        <button
+          className={styles['search-bar__clear-button']}
+          type="button"
+          onClick={actions.onClearQuery}
+          aria-label="Clear search"
+          title="Clear search"
+        >
+          <SearchX className={styles['search-bar__icon']} size={20} aria-hidden="true" />
+        </button>
+      )}
     </div>
   );
 }
