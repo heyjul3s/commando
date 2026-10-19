@@ -12,12 +12,14 @@ describe('app', () => {
       'aria-selected',
       'true',
     );
-    fireEvent.keyDown(window, { key: 'ArrowDown' });
+    fireEvent.keyDown(screen.getByRole('textbox', { name: 'Search commands' }), {
+      key: 'ArrowDown',
+    });
     expect(screen.getByRole('option', { name: 'Search Documentation' })).toHaveAttribute(
       'aria-selected',
       'true',
     );
-    fireEvent.keyDown(window, { key: 'Enter' });
+    fireEvent.keyDown(screen.getByRole('textbox', { name: 'Search commands' }), { key: 'Enter' });
     expect(
       within(screen.getByRole('region', { name: 'Selected command' })).getByRole('heading', {
         name: 'Search Documentation',
@@ -26,8 +28,10 @@ describe('app', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /Open command menu/ }));
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'no matching commands' } });
-    fireEvent.keyDown(window, { key: 'ArrowDown' });
-    fireEvent.keyDown(window, { key: 'Enter' });
+    fireEvent.keyDown(screen.getByRole('textbox', { name: 'Search commands' }), {
+      key: 'ArrowDown',
+    });
+    fireEvent.keyDown(screen.getByRole('textbox', { name: 'Search commands' }), { key: 'Enter' });
     expect(screen.getByText('No commands found')).toBeInTheDocument();
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });

@@ -9,7 +9,7 @@ export function useCommandPaletteShortcut() {
     const handleCommandPaletteShortcut = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === KEYBOARD_KEY.K) {
         event.preventDefault();
-        const { isOpen, actions } = palette.getState();
+        const { actions, isOpen } = palette.getState();
         actions.setIsOpen(!isOpen);
       }
     };

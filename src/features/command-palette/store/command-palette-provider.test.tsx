@@ -14,7 +14,7 @@ describe('commandPaletteContext', () => {
   });
 
   it('preserves the same store across rerenders', () => {
-    const { result, rerender } = renderHook(() => useCommandPaletteStore(), {
+    const { rerender, result } = renderHook(() => useCommandPaletteStore(), {
       wrapper: ({ children }) => (
         <CommandPaletteProvider initialValues={{ isOpen: true }}>{children}</CommandPaletteProvider>
       ),

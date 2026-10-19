@@ -12,11 +12,40 @@ export function commandPaletteActions(
   set: StoreApi<CommandPaletteStore>['setState'],
 ): CommandPaletteStoreActions {
   return {
-    closeCommandPalette: () => set((state) => (state.isOpen ? { isOpen: false } : state)),
-    setActiveIndex: (activeIndex: number) =>
-      set((state) => (state.activeIndex === activeIndex ? state : { activeIndex })),
-    setQuery: (query: string) =>
-      set((state) => (state.query === query ? state : { query, activeIndex: 0 })),
-    setIsOpen: (isOpen: boolean) => set((state) => (state.isOpen === isOpen ? state : { isOpen })),
+    closeCommandPalette: () =>
+      set((state) => {
+        if (!state.isOpen) {
+          return state;
+        }
+
+        return { isOpen: false };
+      }),
+
+    setActiveIndex: (activeIndex) =>
+      set((state) => {
+        if (state.activeIndex === activeIndex) {
+          return state;
+        }
+
+        return { activeIndex };
+      }),
+
+    setIsOpen: (isOpen) =>
+      set((state) => {
+        if (state.isOpen === isOpen) {
+          return state;
+        }
+
+        return { isOpen };
+      }),
+
+    setQuery: (query) =>
+      set((state) => {
+        if (state.query === query) {
+          return state;
+        }
+
+        return { activeIndex: 0, query };
+      }),
   };
 }

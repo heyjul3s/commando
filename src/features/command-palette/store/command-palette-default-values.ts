@@ -5,7 +5,7 @@ export type CommandPaletteStoreInitialValues = {
 };
 
 export const commandPaletteDefaultValues: CommandPaletteStoreInitialValues = {
+  activeIndex: 0,
   isOpen: false,
   query: '',
-  activeIndex: 0,
 };

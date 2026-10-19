@@ -14,5 +14,5 @@ export function getAvailableCommands(commands: Command[], query: string) {
   }, {});
 
   // Keyboard navigation must use the same group order as the rendered list.
-  return { groupedCommands, filteredCommands: Object.values(groupedCommands).flat() };
+  return { filteredCommands: Object.values(groupedCommands).flat(), groupedCommands };
 }

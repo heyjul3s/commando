@@ -8,7 +8,7 @@ describe('app-providers', () => {
   beforeEach(() => localStorage.clear());
 
   it('preserves both stores and their state when the providers rerender', () => {
-    const { result, rerender } = renderHook(
+    const { rerender, result } = renderHook(
       () => ({
         palette: useCommandPaletteStore(),
         workspace: useWorkspacePreviewStore(),

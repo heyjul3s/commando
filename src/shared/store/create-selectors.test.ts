@@ -17,8 +17,8 @@ describe('createSelectors', () => {
     it('should create selectors for all state keys', () => {
       const useStore = create(() => ({
         count: 0,
-        name: 'test',
         isActive: true,
+        name: 'test',
       }));
 
       const store = createSelectors(useStore);
@@ -50,7 +50,7 @@ describe('createSelectors', () => {
       }));
 
       const store = createSelectors(useStore);
-      const { result, rerender } = renderHook(() => store.use.count());
+      const { rerender, result } = renderHook(() => store.use.count());
 
       expect(result.current).toBe(0);
 
@@ -65,8 +65,8 @@ describe('createSelectors', () => {
     it('should create named hook functions', () => {
       const useStore = create(() => ({
         count: 0,
-        userName: 'test',
         isActive: true,
+        userName: 'test',
       }));
 
       const store = createSelectors(useStore);
@@ -85,8 +85,8 @@ describe('createSelectors', () => {
 
     it('should be able to handle nested objects', () => {
       const useStore = create(() => ({
-        user: { name: 'test', age: 30 },
         settings: { theme: 'dark' },
+        user: { age: 30, name: 'test' },
       }));
 
       const store = createSelectors(useStore);
@@ -94,7 +94,7 @@ describe('createSelectors', () => {
       const { result: userResult } = renderHook(() => store.use.user());
       const { result: settingsResult } = renderHook(() => store.use.settings());
 
-      expect(userResult.current).toEqual({ name: 'test', age: 30 });
+      expect(userResult.current).toEqual({ age: 30, name: 'test' });
       expect(settingsResult.current).toEqual({ theme: 'dark' });
     });
 
@@ -126,8 +126,8 @@ describe('createSelectors', () => {
     it('should create selectors for all state keys', () => {
       const store = createStore(() => ({
         count: 0,
-        name: 'test',
         isActive: true,
+        name: 'test',
       }));
 
       const storeWithSelectors = createStoreSelectors(store);
@@ -159,7 +159,7 @@ describe('createSelectors', () => {
       }));
 
       const storeWithSelectors = createStoreSelectors(store);
-      const { result, rerender } = renderHook(() => storeWithSelectors.use.count());
+      const { rerender, result } = renderHook(() => storeWithSelectors.use.count());
 
       expect(result.current).toBe(0);
 
@@ -174,8 +174,8 @@ describe('createSelectors', () => {
     it('should create named hook functions', () => {
       const store = createStore(() => ({
         count: 0,
-        userName: 'test',
         isActive: true,
+        userName: 'test',
       }));
 
       const storeWithSelectors = createStoreSelectors(store);
