@@ -9,7 +9,8 @@ import { workspacePreviewDefaultValues } from '../../../../workspace-preview/sto
 import { useWorkspacePreviewStore } from '../../../../workspace-preview/store';
 
 import type { PropsWithChildren } from 'react';
-import type { Decorator, StoryContext } from '@storybook/react-vite';
+import type { ReactRenderer, StoryContext } from '@storybook/react-vite';
+import type { PartialStoryFn } from 'storybook/internal/types';
 import type { WorkspacePreviewStore } from '../../../../workspace-preview/store/workspace-preview-provider';
 
 export const searchBarFixtures = {
@@ -104,7 +105,7 @@ function ExternalQueryControl() {
   );
 }
 
-export function withStoreStatus(Story: Parameters<Decorator>[0]) {
+export function withStoreStatus(Story: PartialStoryFn<ReactRenderer>) {
   return (
     <>
       <Story />
@@ -113,7 +114,7 @@ export function withStoreStatus(Story: Parameters<Decorator>[0]) {
   );
 }
 
-export function withExternalQueryControl(Story: Parameters<Decorator>[0]) {
+export function withExternalQueryControl(Story: PartialStoryFn<ReactRenderer>) {
   return (
     <>
       <Story />
@@ -122,7 +123,10 @@ export function withExternalQueryControl(Story: Parameters<Decorator>[0]) {
   );
 }
 
-export function withCommandPaletteProvider(Story: Parameters<Decorator>[0], context: StoryContext) {
+export function withCommandPaletteProvider(
+  Story: PartialStoryFn<ReactRenderer>,
+  context: StoryContext,
+) {
   const fixture: Fixture = context.parameters.searchBarFixture ?? searchBarFixtures.default;
 
   return (
