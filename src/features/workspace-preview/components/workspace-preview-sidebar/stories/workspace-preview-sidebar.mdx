@@ -1,0 +1,68 @@
+import { Canvas, Meta, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './workspace-preview-sidebar.stories';
+
+<Meta title="Features/Workspace Preview/Workspace Preview Sidebar/Overview" />
+
+# Workspace sidebar
+
+The sidebar supplies the workspace showcase's compact visual identity. A command
+symbol and a set of pill-shaped markers suggest a surrounding application without
+adding a second working navigation system to the demo.
+
+## Presentational scope
+
+This component has no props, store subscriptions, custom hook, or interaction
+handlers. The markers are decorative `div` elements. They are not links, tabs, or
+buttons, and the active-looking marker does not reflect a route or store value.
+
+Do not give these markers interaction stories that imply navigation works. If the
+sidebar later becomes real navigation, introduce actual destinations, meaningful
+names, and appropriate active-state semantics as part of that change.
+
+## Integration
+
+<Source language="tsx" code={`<WorkspacePreviewSidebar />`} />
+
+The component can render without feature providers. It still needs the shared
+global styles for colour tokens and its CSS module for layout. Within the assembled
+workspace, its dimensions and placement cooperate with the workspace's container.
+
+For a standalone story, provide enough surrounding height to inspect the full
+sidebar. A cropped icon or a very small centred canvas can hide the role it plays
+in the screen composition.
+
+## Visual states
+
+The standalone fixture uses the same 76px sidebar width as the workspace grid,
+with a 480px-tall surface so the brand mark and decorative markers can be reviewed
+in context. It adds no labels, navigation controls, or test readouts.
+
+Default uses the light theme. Dark applies the app's dark theme tokens to the
+fixture, including its surrounding background.
+
+<Canvas of={Stories.Default} />
+<Canvas of={Stories.Dark} />
+
+At viewport widths of 760px or less, the component hides through its production
+media query. Use the assembled Workspace Preview stories to inspect that layout
+alongside the rest of the workspace. Narrowing only the story's container does
+not activate a viewport media query.
+
+There are no interaction stories because the component has no interactive
+behaviour. Review the brand mark alignment, marker spacing, surface, and border
+contrast in both themes. The [workspace feature overview](?path=/docs/features-workspace-preview-overview--docs)
+shows the assembled layout.
+
+## Story organisation
+
+- `workspace-preview-sidebar.stories.tsx`: light and dark visual states.
+- `workspace-preview-sidebar.fixtures.tsx`: scoped theme and preview surface.
+- `workspace-preview-sidebar-stories.module.css`: standalone preview dimensions.
+
+## Accessibility boundary
+
+The wrapper currently uses a named navigation landmark, while its children contain
+no actionable destinations. The command icon is hidden from assistive technology.
+If the sidebar remains decorative, review whether the navigation landmark itself
+still communicates a useful purpose; it should not suggest controls that do not exist.

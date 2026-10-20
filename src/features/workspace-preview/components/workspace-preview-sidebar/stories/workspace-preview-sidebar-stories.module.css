@@ -1,0 +1,16 @@
+.fixture {
+  background: var(--color-background);
+  display: grid;
+  min-height: 100vh;
+  padding: 24px;
+  place-items: center;
+}
+
+.fixture__surface {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  display: grid;
+  min-height: 480px;
+  overflow: hidden;
+  width: 76px;
+}
