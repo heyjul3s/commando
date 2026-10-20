@@ -1,0 +1,113 @@
+import { Canvas, Meta, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './workspace-recent-commands.stories';
+import * as Interactions from './workspace-recent-commands.interactions.stories';
+
+<Meta title="Features/Workspace Preview/Workspace Recent Commands/Overview" />
+
+# Recent commands
+
+Recent Commands displays the workspace's latest command choices and offers a way
+to clear that history. It is a record of choices in the demo, separate from the
+palette's currently highlighted result and the workspace's last selected command.
+
+## State ownership
+
+The component takes no props. `useWorkspaceRecentCommands` subscribes to
+`recentCommandIds`, resolves IDs against the shared command catalogue, and exposes
+`onClearRecentCommands` along with the derived list and empty-state flag.
+
+Unknown IDs are omitted from the displayed list. The hook preserves the order of
+valid IDs and derives complete commands for their labels and icons; it does not
+keep another copy of history in local component state.
+
+## History behaviour
+
+The workspace store owns history updates. Choosing a command places its ID first,
+removes any older copy of that ID, and keeps at most six entries. This component
+reacts to those updates through its own subscription.
+
+The clear action empties history while preserving the workspace's selected
+command. The component then displays “No recent commands” and disables its clear
+button. The empty-state decision follows the resolved command list, so invalid
+IDs do not produce an apparently populated but empty list.
+
+Rows display a label and decorative icon. They are not currently buttons for
+rerunning commands; interaction stories should not imply that clicking a history
+entry invokes an action.
+
+## Integration
+
+The workspace provider is sufficient to render the list in isolation. A local
+provider can seed initial history, but its persistence middleware may hydrate
+saved history over that value.
+
+<Source
+  language="tsx"
+  code={`<WorkspacePreviewProvider initialValues={{ recentCommandIds: ['projects', 'docs'] }}>
+  <WorkspaceRecentCommands />
+</WorkspacePreviewProvider>`}
+/>
+
+For exact visual snapshots and interaction assertions, use isolated memory-backed
+storage rather than relying on browser history. The application persists only
+recent IDs under `WORKSPACE_PREVIEW`; selected command objects and action functions
+are not serialised.
+
+## Visual states
+
+Each story creates its own workspace store using production actions and isolated
+in-memory persistence. Saved browser history cannot override its seeded values.
+The fixture provides a 320px-wide panel with enough height to inspect its layout;
+it does not render test readouts or extra controls.
+
+- Default: empty history with the clear control disabled.
+- Single Command: Projects as the only recent entry.
+- Full History: six entries in a deterministic order.
+- Mixed Unknown IDs: unknown IDs are omitted; valid entries keep their order.
+- Unknown IDs Only: the resolved list is empty and clearing is disabled.
+
+<Canvas of={Stories.Default} />
+<Canvas of={Stories.SingleCommand} />
+<Canvas of={Stories.FullHistory} />
+<Canvas of={Stories.MixedUnknownIds} />
+<Canvas of={Stories.UnknownIdsOnly} />
+
+Labels come from the production catalogue. Use Full History to review its longer
+labels; this component does not accept custom labels or command props.
+
+## Interactions
+
+Clear History checks the initial six labels and their order, then clicks the clear
+control and verifies that every row disappears, the empty message appears, and
+the button becomes disabled. Keyboard stories tab to the same native button and
+activate it with Enter or Space.
+
+<Canvas of={Interactions.ClearHistory} />
+<Canvas of={Interactions.ClearWithEnter} />
+<Canvas of={Interactions.ClearWithSpace} />
+
+Unknown-ID scenarios assert the visible result: valid labels remain in their
+original order, while an unknown-only history displays the disabled empty state.
+
+<Canvas of={Interactions.MixedUnknownIds} />
+<Canvas of={Interactions.UnknownIdsOnly} />
+
+The assembled Workspace Preview stories verify that clearing history preserves
+the selected-command heading, and that new selections reorder and deduplicate
+history. Playwright verifies persistence after a real page reload.
+
+## Story organisation
+
+- `workspace-recent-commands.stories.tsx`: visual states.
+- `workspace-recent-commands.interactions.stories.tsx`: clearing and unknown-ID cases.
+- `workspace-recent-commands.interactions.ts`: named steps, helpers, and visible assertions.
+- `workspace-recent-commands.fixtures.tsx`: initial history and isolated store.
+- `workspace-recent-commands-stories.module.css`: standalone panel dimensions.
+
+## Accessibility
+
+The section is named “Recent commands”, the populated list is named “Recently
+triggered commands”, and the button is labeled “Clear recent commands”. Empty
+history uses the native disabled-button state. Use the visible labels and roles
+in interaction assertions so the story documents what a user can actually find.

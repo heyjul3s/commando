@@ -1,0 +1,6 @@
+.fixture {
+  display: grid;
+  max-width: 90vw;
+  min-height: 420px;
+  width: 320px;
+}

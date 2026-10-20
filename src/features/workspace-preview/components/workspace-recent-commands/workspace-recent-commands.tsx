@@ -6,7 +6,7 @@ import styles from './workspace-recent-commands.module.css';
 
 export function WorkspaceRecentCommands() {
   const { actions, derived } = useWorkspaceRecentCommands();
-  const { recentCommands, isEmptyRecentCommands } = derived;
+  const { isEmptyRecentCommands, recentCommands } = derived;
 
   return (
     <section className={styles['workspace-recent-commands']} aria-label="Recent commands">
