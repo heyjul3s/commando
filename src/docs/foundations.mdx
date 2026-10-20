@@ -76,17 +76,17 @@ repeated numeric values as an established system.
 
 ```text
 src/
-  app/                        Application composition and providers
-  features/
-    command-palette/
-      components/             Components with colocated hooks, styles, and tests
-      store/                  Shared palette state and actions
-      utils/                  Filtering and grouping
-    workspace-preview/
-      components/
-      store/
-  shared/                     Constants and general utilities
-  docs/                       Cross-feature Storybook documentation
+├── app/                        Application composition and providers
+├── features/
+│   ├── command-palette/
+│   │   ├── components/             Components with colocated hooks, styles, and tests
+│   │   ├── store/                  Shared palette state and actions
+│   │   └── utils/                  Filtering and grouping
+│   └── workspace-preview/
+│       ├── components/
+│       └── store/
+├── shared/                     Constants and general utilities
+└── docs/                       Cross-feature Storybook documentation
 ```
 
 A component's primary hook owns its subscriptions and UI behaviour. Supporting

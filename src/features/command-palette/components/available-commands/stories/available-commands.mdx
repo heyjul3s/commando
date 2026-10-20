@@ -51,10 +51,13 @@ palette keyboard hook. The assembled palette stories verify keyboard selection.
 
 ## Story organisation
 
-- `available-commands.stories.tsx`: representative visual states.
-- `available-commands.interactions.stories.tsx`: executable interaction scenarios.
-- `available-commands.interactions.ts`: named play functions and assertions.
-- `available-commands.fixtures.ts`: initial state and isolated provider setup.
+```text
+stories/
+├── available-commands.stories.tsx               # representative visual states.
+├── available-commands.interactions.stories.tsx  # executable interaction scenarios.
+├── available-commands.interactions.ts           # named play functions and assertions.
+└── available-commands.fixtures.ts               # initial state and isolated provider setup.
+```
 
 Each example creates fresh stores using production actions. Workspace persistence
 uses isolated memory storage so the examples neither depend on nor modify saved browser history.
