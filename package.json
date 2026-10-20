@@ -33,6 +33,7 @@
     "browserux.css": "^5.0.1",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.52.0",
+    "focus-trap-react": "^12.0.3",
     "lucide-react": "^1.57.0",
     "plop": "^4.0.5",
     "react": "^19.3.1",

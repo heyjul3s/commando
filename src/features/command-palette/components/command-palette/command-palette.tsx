@@ -1,5 +1,6 @@
 import { X } from 'lucide-react';
 import { useId } from 'react';
+import { FocusTrap } from 'focus-trap-react';
 import { AvailableCommands } from '../available-commands/available-commands';
 import { SearchBar } from '../search-bar/search-bar';
 import { useCommandPalette } from './hooks/use-command-palette';
@@ -20,32 +21,41 @@ export function CommandPalette() {
       role="presentation"
       onMouseDown={commandPalette.actions.onCloseCommandPalette}
     >
-      <section
-        className={styles['command-palette']}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        onMouseDown={commandPalette.actions.onDialogMouseDown}
+      {' '}
+      <FocusTrap
+        focusTrapOptions={{
+          escapeDeactivates: false,
+          initialFocus: '[aria-label="Search commands"]',
+          returnFocusOnDeactivate: true,
+        }}
       >
-        <div className={styles['command-palette__header']}>
-          <h2 className={styles['command-palette__title']} id={titleId}>
-            Search Commands
-          </h2>
+        <section
+          className={styles['command-palette']}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+          onMouseDown={commandPalette.actions.onDialogMouseDown}
+        >
+          <div className={styles['command-palette__header']}>
+            <h2 className={styles['command-palette__title']} id={titleId}>
+              Search Commands
+            </h2>
 
-          <button
-            className={styles['command-palette__close-button']}
-            type="button"
-            onClick={commandPalette.actions.onCloseCommandPalette}
-            aria-label="Close command palette"
-            title="Close command palette"
-          >
-            <X size={18} aria-hidden="true" />
-          </button>
-        </div>
+            <button
+              className={styles['command-palette__close-button']}
+              type="button"
+              onClick={commandPalette.actions.onCloseCommandPalette}
+              aria-label="Close command palette"
+              title="Close command palette"
+            >
+              <X size={18} aria-hidden="true" />
+            </button>
+          </div>
 
-        <SearchBar />
-        <AvailableCommands />
-      </section>
+          <SearchBar />
+          <AvailableCommands />
+        </section>
+      </FocusTrap>
     </div>
   );
 }
