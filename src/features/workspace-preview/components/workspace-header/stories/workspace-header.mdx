@@ -17,7 +17,8 @@ the command palette. It combines the “Commando” identity, a showcase label, 
 palette actions and exposes `onOpenCommandPalette`. Activating the button calls
 `setIsOpen(true)`; repeated activation keeps the palette open rather than toggling it.
 
-The header takes no props and does not subscribe to open state. It can request
+The header takes no props and does not subscribe to open state. Its labelled Theme
+select uses the shared theme provider to choose Light, Dark, or System. It can request
 opening, but it does not render the dialog or register the global shortcut.
 
 ## Integration
@@ -47,6 +48,7 @@ There is no separate open-state visual variant because the header does not
 change its appearance when the palette opens.
 
 <Canvas of={Stories.Default} />
+<Canvas of={Stories.Dark} />
 
 ## Interactions
 
@@ -63,6 +65,7 @@ Open starts with an open store and verifies repeated clicks keep it open.
 <Canvas of={Interactions.Enter} />
 <Canvas of={Interactions.Space} />
 <Canvas of={Interactions.AlreadyOpen} />
+<Canvas of={Interactions.ChangeTheme} />
 
 ## Story organisation
 

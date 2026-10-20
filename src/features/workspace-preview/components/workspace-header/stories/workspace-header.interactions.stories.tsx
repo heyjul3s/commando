@@ -1,6 +1,12 @@
 import { WorkspaceHeader } from '../workspace-header';
 import { withWorkspaceHeaderFixture, workspaceHeaderFixtures } from './workspace-header.fixtures';
-import { pointerOpen, enterOpen, spaceOpen, alreadyOpen } from './workspace-header.interactions';
+import {
+  pointerOpen,
+  enterOpen,
+  spaceOpen,
+  alreadyOpen,
+  changeTheme,
+} from './workspace-header.interactions';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -29,4 +35,12 @@ export const Space: Story = { play: spaceOpen };
 export const AlreadyOpen: Story = {
   parameters: { workspaceHeaderFixture: workspaceHeaderFixtures.open },
   play: alreadyOpen,
+};
+
+// -----------------------------------------------------------------------------
+// Appearance
+// -----------------------------------------------------------------------------
+
+export const ChangeTheme: Story = {
+  play: changeTheme,
 };

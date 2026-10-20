@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
-import { CommandPaletteProvider, useCommandPaletteStore } from '../../../command-palette/store';
+import { useCommandPaletteStore } from '../../../command-palette/store';
+import { AppProviders } from '../../../../app/providers/app-providers';
 import { useWorkspaceHeader } from './use-workspace-header';
 
 describe('use-workspace-header', () => {
@@ -9,7 +10,7 @@ describe('use-workspace-header', () => {
         header: useWorkspaceHeader(),
         palette: useCommandPaletteStore(),
       }),
-      { wrapper: CommandPaletteProvider },
+      { wrapper: AppProviders },
     );
 
     expect(result.current.palette.getState().isOpen).toBe(false);

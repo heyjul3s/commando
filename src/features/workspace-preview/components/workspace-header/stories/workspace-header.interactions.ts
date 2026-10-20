@@ -1,3 +1,4 @@
+import { THEME } from '../../../../../app/theme/theme';
 import { expect } from 'storybook/test';
 
 import type { StoryContext } from '@storybook/react-vite';
@@ -64,5 +65,26 @@ export async function alreadyOpen({ canvas, step, userEvent }: StoryContext) {
     await expect(status).toHaveTextContent('Open');
     await userEvent.click(trigger);
     await expect(status).toHaveTextContent('Open');
+  });
+}
+
+// -----------------------------------------------------------------------------
+// Appearance
+// -----------------------------------------------------------------------------
+
+export async function changeTheme({ canvas, step, userEvent }: StoryContext) {
+  await step('Choose a dark appearance from the labelled theme control', async () => {
+    const control = canvas.getByRole('combobox', { name: 'Theme' });
+
+    await userEvent.selectOptions(control, THEME.Dark);
+    await expect(control).toHaveValue(THEME.Dark);
+    await expect(control.ownerDocument.documentElement).toHaveAttribute('data-theme', THEME.Dark);
+  });
+
+  await step('Switch back to light appearance', async () => {
+    const control = canvas.getByRole('combobox', { name: 'Theme' });
+
+    await userEvent.selectOptions(control, THEME.Light);
+    await expect(control.ownerDocument.documentElement).toHaveAttribute('data-theme', THEME.Light);
   });
 }

@@ -1,3 +1,4 @@
+import { THEME } from '../../../../../app/theme/theme';
 import { WorkspaceHeader } from '../workspace-header';
 import { withWorkspaceHeaderFixture } from './workspace-header.fixtures';
 
@@ -11,6 +12,13 @@ const meta = {
 } satisfies Meta<typeof WorkspaceHeader>;
 
 export default meta;
+
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+
+export const Dark: Story = {
+  globals: {
+    theme: THEME.Dark,
+  },
+};

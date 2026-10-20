@@ -3,6 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Apply the saved theme before styles and React load.
+      const systemDark = matchMedia('(prefers-color-scheme: dark)').matches;
+      let theme = systemDark ? 'dark' : 'light';
+
+      try {
+        const preference = localStorage.getItem('cmd-palette-theme');
+
+        if (preference === 'light' || preference === 'dark') {
+          theme = preference;
+        }
+      } catch {
+        // Keep the system theme when browser storage is unavailable.
+      }
+
+      document.documentElement.dataset.theme = theme;
+    </script>
     <title>Command Palette Showcase</title>
   </head>
 
