@@ -1,6 +1,10 @@
 import type { RoleSelector } from './utils';
 
 export const APP_SELECTORS = {
+  background: {
+    options: { includeHidden: true },
+    role: 'main',
+  },
   clearSearchButton: {
     options: {
       name: 'Clear search',
@@ -28,6 +32,12 @@ export const APP_SELECTORS = {
       },
       role: 'option',
     },
+    searchDocumentation: {
+      options: {
+        name: 'Search Documentation',
+      },
+      role: 'option',
+    },
   },
 
   commands: {
@@ -39,6 +49,10 @@ export const APP_SELECTORS = {
       name: 'Search Commands',
     },
     role: 'dialog',
+  },
+
+  emptyResults: {
+    role: 'status',
   },
 
   openPalette: {

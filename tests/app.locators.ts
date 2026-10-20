@@ -29,11 +29,13 @@ export function getAppLocators(page: Page) {
   }
 
   return {
+    background: roleBy(page, APP_SELECTORS.background),
     clearSearchButton: roleBy(dialog, APP_SELECTORS.clearSearchButton),
     closePaletteButton: roleBy(dialog, APP_SELECTORS.closePaletteButton),
     command,
     commandOptions: roleBy(dialog, APP_SELECTORS.commands),
     dialog,
+    emptyResults: roleBy(dialog, APP_SELECTORS.emptyResults),
     openPaletteButton: roleBy(page, APP_SELECTORS.openPalette),
     recentCommand,
     searchInput: roleBy(dialog, APP_SELECTORS.searchInput),

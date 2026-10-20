@@ -26,6 +26,59 @@ describe('Command Palette', () => {
     await step('Workspace is updated with selected command', async () => {
       await expect(app.selectedCommand('browseProjects')).toBeVisible();
     });
+
+    await step('Reopen after selection with a cleared query and dismiss using Escape', async () => {
+      await page.keyboard.press('ControlOrMeta+k');
+      await expect(app.searchInput).toHaveValue('');
+      await app.searchInput.press('Escape');
+      await expect(app.dialog).not.toBeVisible();
+    });
+  });
+
+  test('shares hover highlighting with keyboard navigation and selection', async ({ page }) => {
+    const app = getAppLocators(page);
+
+    await step('Hover a command while focus remains in the search input', async () => {
+      await app.openPaletteButton.click();
+      await expect(app.searchInput).toBeFocused();
+      await app.command('browseProjects').hover();
+      await expect(app.command('browseProjects')).toHaveAttribute('aria-selected', 'true');
+    });
+
+    await step('ArrowDown highlights the next command and Enter selects it', async () => {
+      await app.searchInput.press('ArrowDown');
+      await expect(app.command('searchDocumentation')).toHaveAttribute('aria-selected', 'true');
+      await expect(app.command('browseProjects')).toHaveAttribute('aria-selected', 'false');
+      await app.searchInput.press('Enter');
+      await expect(app.dialog).not.toBeVisible();
+      await expect(app.selectedCommand('searchDocumentation')).toBeVisible();
+      await expect(app.recentCommand('searchDocumentation')).toBeVisible();
+    });
+  });
+
+  test('keeps the palette open when navigating and selecting empty results', async ({ page }) => {
+    const app = getAppLocators(page);
+
+    await step('Search for a query with no matching commands', async () => {
+      await app.openPaletteButton.click();
+      await app.searchInput.fill('no matching commands');
+      await expect(app.commandOptions).toHaveCount(0);
+      await expect(app.emptyResults).toHaveText('No commands found');
+    });
+
+    await step('ArrowDown and Enter keep the empty palette open', async () => {
+      await app.searchInput.press('ArrowDown');
+      await app.searchInput.press('Enter');
+      await expect(app.dialog).toBeVisible();
+      await expect(app.emptyResults).toHaveText('No commands found');
+      await expect(app.searchInput).toBeFocused();
+    });
+
+    await step('Dismiss without changing the selected command', async () => {
+      await app.searchInput.press('Escape');
+      await expect(app.dialog).not.toBeVisible();
+      await expect(app.selectedCommand('openDashboard')).toBeVisible();
+    });
   });
 
   test('clears search without closing', async ({ page }) => {
@@ -104,6 +157,31 @@ describe('Command Palette', () => {
       await page.reload();
 
       await expect(app.recentCommand('browseProjects')).toBeVisible();
+    });
+  });
+
+  test('makes the workspace inert only while the palette is open', async ({ page }) => {
+    const app = getAppLocators(page);
+    const workspace = app.background;
+
+    await step('The workspace starts interactive', async () => {
+      await expect(workspace).not.toHaveAttribute('inert');
+      await app.openPaletteButton.click();
+    });
+
+    await step('Opening disables the workspace while leaving the dialog interactive', async () => {
+      await expect(workspace).toHaveAttribute('inert', '');
+      await expect(app.dialog).toBeVisible();
+      await expect(app.dialog).not.toHaveAttribute('inert');
+      await app.searchInput.fill('projects');
+      await expect(app.searchInput).toHaveValue('projects');
+    });
+
+    await step('Closing restores workspace interaction', async () => {
+      await app.closePaletteButton.click();
+      await expect(workspace).not.toHaveAttribute('inert');
+      await app.openPaletteButton.click();
+      await expect(app.dialog).toBeVisible();
     });
   });
 });
