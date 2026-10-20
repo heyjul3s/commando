@@ -1,0 +1,88 @@
+import { Canvas, Meta, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './workspace-header.stories';
+import * as Interactions from './workspace-header.interactions.stories';
+
+<Meta title="Features/Workspace Preview/Workspace Header/Overview" />
+
+# Workspace header
+
+The header gives the workspace its title and provides the visible entry point to
+the command palette. It combines the “Commando” identity, a showcase label, and the
+“Open command menu” button.
+
+## State ownership
+
+`WorkspaceHeader` renders the UI. Its colocated `useWorkspaceHeader` hook reads
+palette actions and exposes `onOpenCommandPalette`. Activating the button calls
+`setIsOpen(true)`; repeated activation keeps the palette open rather than toggling it.
+
+The header takes no props and does not subscribe to open state. It can request
+opening, but it does not render the dialog or register the global shortcut.
+
+## Integration
+
+A palette provider is required, including for an isolated header story. The global
+Storybook decorator supplies it. Mount the dialog under that same provider if the
+story should visibly open it.
+
+<Source
+  language="tsx"
+  code={`<AppProviders>
+  <WorkspaceHeader />
+  <CommandPalette />
+</AppProviders>`}
+/>
+
+Both feature providers are included because the dialog's command selection also
+needs the workspace store. Rendering the header alone still changes palette state,
+but there is no visible dialog to open in that isolated story.
+
+## Visual state
+
+The Default story uses a raised surface and a fresh, initially closed palette
+store. Resize the browser below 760px to inspect the actual responsive layout:
+the title and trigger stack vertically and the trigger fills the available width.
+There is no separate open-state visual variant because the header does not
+change its appearance when the palette opens.
+
+<Canvas of={Stories.Default} />
+
+## Interactions
+
+Each interaction has its own palette store. The separate Story fixture state
+panel reports the store's open state; it is not part of WorkspaceHeader. These
+stories intentionally do not mount the dialog or the application's shortcut
+listener. The assembled palette stories and app tests cover those flows.
+
+Pointer activation, Enter, and Space each change the store from Closed to Open.
+The keyboard stories tab to the native trigger before activating it. Already
+Open starts with an open store and verifies repeated clicks keep it open.
+
+<Canvas of={Interactions.Pointer} />
+<Canvas of={Interactions.Enter} />
+<Canvas of={Interactions.Space} />
+<Canvas of={Interactions.AlreadyOpen} />
+
+## Story organisation
+
+- `workspace-header.stories.tsx`: Default visual preview.
+- `workspace-header.interactions.stories.tsx`: pointer, keyboard, and already-open scenarios.
+- `workspace-header.interactions.ts`: named steps, assertions, and local accessible-name constants.
+- `workspace-header.fixtures.tsx`: isolated palette provider and fixture status panel.
+- `workspace-header-stories.module.css`: preview surface and test readout styles.
+
+## Keyboard and accessibility
+
+The trigger is a native button, so focused Enter and Space activation use the same
+click handler as pointer activation. Its search icon is decorative and the label
+provides its purpose.
+
+The displayed shortcut hint is currently fixed to Command+K. The application
+shortcut handler accepts both Command+K and Control+K and is mounted by App, not
+by this header. Do not assume that showing the hint installs the listener in an
+isolated story.
+
+The button does not currently expose `aria-expanded` or a dialog association.
+Review that relationship with the final dialog focus model rather than treating
+an isolated render as proof of the complete opening experience.

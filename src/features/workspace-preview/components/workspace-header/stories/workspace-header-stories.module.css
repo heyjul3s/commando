@@ -1,0 +1,33 @@
+.fixture {
+  box-sizing: border-box;
+  margin: 0 auto;
+  max-width: 960px;
+  padding: 24px;
+  width: 100%;
+}
+
+.fixture__surface {
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.fixture__panel {
+  background: var(--color-surface-muted);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: 8px;
+  color: var(--color-text-secondary);
+  font-size: 16px;
+  line-height: 1.5;
+  margin-top: 16px;
+  padding: 16px;
+}
+
+.fixture__panel strong {
+  font-size: 18px;
+}
+
+.fixture__hint {
+  font-size: 14px;
+}
