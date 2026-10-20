@@ -23,7 +23,7 @@ const EMPTY_HISTORY_MESSAGE = 'No recent commands';
 async function chooseCommand({ canvas, userEvent }: StoryContext, command: Command) {
   await userEvent.click(canvas.getByRole('button', { name: OPEN_BUTTON_NAME }));
   const dialog = within(canvas.getByRole('dialog', { name: DIALOG_NAME }));
-  await userEvent.type(dialog.getByRole('textbox', { name: SEARCH_INPUT_NAME }), command.label);
+  await userEvent.type(dialog.getByRole('combobox', { name: SEARCH_INPUT_NAME }), command.label);
   await userEvent.click(dialog.getByRole('option', { name: command.label }));
   await expect(canvas.queryByRole('dialog', { name: DIALOG_NAME })).not.toBeInTheDocument();
 }

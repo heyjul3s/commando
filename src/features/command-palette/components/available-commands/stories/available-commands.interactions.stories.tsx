@@ -5,9 +5,18 @@ import { hoverHighlight, selectCommand } from './available-commands.interactions
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
+  args: {
+    listboxId: 'available-commands-story-results',
+    tabIndex: 0,
+  },
   component: AvailableCommands,
   decorators: [withAvailableCommandsFixture],
-  parameters: { controls: { disable: true }, layout: 'centered' },
+  parameters: {
+    controls: {
+      disable: true,
+    },
+    layout: 'centered',
+  },
   title: 'Features/Command Palette/Available Commands/Interactions',
 } satisfies Meta<typeof AvailableCommands>;
 
@@ -16,11 +25,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Hover: Story = {
-  parameters: { showHighlightStatus: true },
+  parameters: {
+    showHighlightStatus: true,
+  },
   play: hoverHighlight,
 };
 
 export const Select: Story = {
-  parameters: { showSelectionStatus: true },
+  parameters: {
+    showSelectionStatus: true,
+  },
   play: selectCommand,
 };

@@ -8,9 +8,18 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
+  args: {
+    listboxId: 'available-commands-story-results',
+    tabIndex: 0,
+  },
   component: AvailableCommands,
   decorators: [withAvailableCommandsFixture],
-  parameters: { controls: { disable: true }, layout: 'centered' },
+  parameters: {
+    controls: {
+      disable: true,
+    },
+    layout: 'centered',
+  },
   title: 'Features/Command Palette/Available Commands/States',
 } satisfies Meta<typeof AvailableCommands>;
 

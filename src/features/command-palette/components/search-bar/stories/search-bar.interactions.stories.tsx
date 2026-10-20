@@ -28,6 +28,9 @@ import {
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
+  args: {
+    listboxId: 'search-bar-story-results',
+  },
   component: SearchBar,
   decorators: [
     withSearchBarSurface,

@@ -77,7 +77,7 @@ export const APP_SELECTORS = {
     options: {
       name: 'Search commands',
     },
-    role: 'textbox',
+    role: 'combobox',
   },
 
   selectedCommand: {

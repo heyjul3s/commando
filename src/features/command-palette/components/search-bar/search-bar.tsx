@@ -2,8 +2,12 @@ import { useSearchBar } from './use-search-bar';
 import { Search, SearchX } from 'lucide-react';
 import styles from './search-bar.module.css';
 
-export function SearchBar() {
-  const { actions, refs, state } = useSearchBar();
+type SearchBarProps = {
+  listboxId: string;
+};
+
+export function SearchBar({ listboxId }: SearchBarProps) {
+  const { actions, refs, state } = useSearchBar(listboxId);
 
   return (
     <div className={styles['search-bar']}>
@@ -12,11 +16,16 @@ export function SearchBar() {
       <input
         className={styles['search-bar__input']}
         ref={refs.inputRef}
+        role="combobox"
         value={state.query}
         onChange={actions.onQueryChange}
         onKeyDown={actions.onQueryKeyDown}
         placeholder="Search commands..."
+        aria-activedescendant={state.activeOptionId}
         aria-label="Search commands"
+        aria-autocomplete="list"
+        aria-expanded={state.hasResults}
+        aria-controls={state.hasResults ? listboxId : undefined}
       />
 
       {state.query !== '' && (

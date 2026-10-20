@@ -1,7 +1,12 @@
 import { useAvailableCommands } from './use-available-commands';
 import styles from './available-commands.module.css';
 
-export function AvailableCommands() {
+type AvailableCommandsProps = {
+  listboxId: string;
+  tabIndex?: 0 | -1;
+};
+
+export function AvailableCommands({ listboxId, tabIndex }: AvailableCommandsProps) {
   const { actions, derived, state } = useAvailableCommands();
   const { activeIndex } = state;
   const { filteredCommands, groupedCommands } = derived;
@@ -35,9 +40,11 @@ export function AvailableCommands() {
         return (
           <button
             className={styles['available-commands__item']}
+            id={`${listboxId}-${command.id}`}
             data-selected={selected}
             key={command.id}
             role="option"
+            tabIndex={-1}
             aria-selected={selected}
             type="button"
             onMouseEnter={handlers.onMouseEnter}
@@ -54,7 +61,13 @@ export function AvailableCommands() {
   ));
 
   return (
-    <div className={styles['available-commands']} role="listbox" aria-label="Available commands">
+    <div
+      className={styles['available-commands']}
+      role="listbox"
+      aria-label="Available commands"
+      id={listboxId}
+      tabIndex={tabIndex}
+    >
       {commandGroups}
     </div>
   );

@@ -1,3 +1,5 @@
+import { COMMANDS } from '../../../../../shared/constants';
+import { getAvailableCommands } from '../../../utils';
 import { createElement, useId, useState } from 'react';
 import { createStore } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -14,11 +16,31 @@ import type { PartialStoryFn } from 'storybook/internal/types';
 import type { WorkspacePreviewStore } from '../../../../workspace-preview/store/workspace-preview-provider';
 
 export const searchBarFixtures = {
-  closed: { activeIndex: 0, isOpen: false, query: '' },
-  default: { activeIndex: 0, isOpen: true, query: '' },
-  empty: { activeIndex: 0, isOpen: true, query: 'no matching command' },
-  existingQuery: { activeIndex: 0, isOpen: true, query: 'existing query' },
-  highlighted: { activeIndex: 2, isOpen: true, query: 'documentation' },
+  closed: {
+    activeIndex: 0,
+    isOpen: false,
+    query: '',
+  },
+  default: {
+    activeIndex: 0,
+    isOpen: true,
+    query: '',
+  },
+  empty: {
+    activeIndex: 0,
+    isOpen: true,
+    query: 'no matching command',
+  },
+  existingQuery: {
+    activeIndex: 0,
+    isOpen: true,
+    query: 'existing query',
+  },
+  highlighted: {
+    activeIndex: 2,
+    isOpen: true,
+    query: 'documentation',
+  },
   longQuery: {
     activeIndex: 0,
     isOpen: true,
@@ -172,7 +194,46 @@ export function withExternalQueryControl(
   );
 }
 
+function SearchSuggestionsFixture({ listboxId }: { listboxId: string }) {
+  const palette = useCommandPaletteStore();
+  const query = palette.use.query();
+  const activeIndex = palette.use.activeIndex();
+  const { filteredCommands } = getAvailableCommands(COMMANDS, query);
+
+  if (filteredCommands.length === 0) {
+    return null;
+  }
+
+  return (
+    <div
+      id={listboxId}
+      role="listbox"
+      aria-label="Search suggestions fixture"
+      style={{
+        clipPath: 'inset(50%)',
+        height: 1,
+        overflow: 'hidden',
+        position: 'absolute',
+        width: 1,
+      }}
+    >
+      {filteredCommands.map((command, index) => (
+        <span
+          id={`${listboxId}-${command.id}`}
+          key={command.id}
+          role="option"
+          aria-selected={index === activeIndex}
+        >
+          {command.label}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export function withSearchBarSurface(Story: PartialStoryFn<ReactRenderer>) {
+  const listboxId = useId();
+
   return (
     <div
       style={{
@@ -183,7 +244,8 @@ export function withSearchBarSurface(Story: PartialStoryFn<ReactRenderer>) {
         padding: '1rem',
       }}
     >
-      <Story />
+      <Story args={{ listboxId }} />
+      <SearchSuggestionsFixture listboxId={listboxId} />
     </div>
   );
 }

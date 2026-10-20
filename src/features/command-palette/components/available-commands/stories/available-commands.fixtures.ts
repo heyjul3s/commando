@@ -1,4 +1,4 @@
-import { createElement, useState } from 'react';
+import { createElement, useId, useState } from 'react';
 import { createStore } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { COMMANDS } from '../../../../../shared/constants';
@@ -16,10 +16,22 @@ import type { Decorator } from '@storybook/react-vite';
 import type { WorkspacePreviewStore } from '../../../../workspace-preview/store/workspace-preview-provider';
 
 export const availableCommandsFixtures = {
-  all: { activeIndex: 0, query: '' },
-  empty: { activeIndex: 0, query: 'no matching command' },
-  filtered: { activeIndex: 0, query: 'documentation' },
-  highlighted: { activeIndex: 1, query: '' },
+  all: {
+    activeIndex: 0,
+    query: '',
+  },
+  empty: {
+    activeIndex: 0,
+    query: 'no matching command',
+  },
+  filtered: {
+    activeIndex: 0,
+    query: 'documentation',
+  },
+  highlighted: {
+    activeIndex: 1,
+    query: '',
+  },
 };
 
 type Fixture = typeof availableCommandsFixtures.all;
@@ -104,6 +116,7 @@ function SelectionStatus() {
 }
 
 export const withAvailableCommandsFixture: Decorator = (Story, context) => {
+  const listboxId = useId();
   const fixture: Fixture =
     context.parameters.availableCommandsFixture ?? availableCommandsFixtures.all;
 
@@ -112,7 +125,7 @@ export const withAvailableCommandsFixture: Decorator = (Story, context) => {
     children: createElement(
       'div',
       { style: { width: 'min(560px, 90vw)' } },
-      createElement(Story),
+      Story({ args: { ...context.args, listboxId } }),
       context.parameters.showHighlightStatus ? createElement(HighlightStatus) : null,
       context.parameters.showSelectionStatus ? createElement(SelectionStatus) : null,
     ),

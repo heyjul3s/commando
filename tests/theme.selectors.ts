@@ -11,7 +11,7 @@ export const THEME_SELECTORS = {
   },
   searchInput: {
     options: { name: 'Search commands' },
-    role: 'textbox',
+    role: 'combobox',
   },
   themeSelect: {
     options: { name: 'Theme' },

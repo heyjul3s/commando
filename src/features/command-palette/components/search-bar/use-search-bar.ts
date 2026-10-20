@@ -7,12 +7,17 @@ import { getAvailableCommands } from '../../utils';
 
 import type { ChangeEvent, KeyboardEvent } from 'react';
 
-export function useSearchBar() {
+export function useSearchBar(listboxId: string) {
   const palette = useCommandPaletteStore();
   const workspace = useWorkspacePreviewStore();
   const query = palette.use.query();
   const { setQuery } = palette.use.actions();
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const activeIndex = palette.use.activeIndex();
+  const { filteredCommands } = getAvailableCommands(COMMANDS, query);
+  const activeCommand = filteredCommands[activeIndex];
+  const activeOptionId = activeCommand ? `${listboxId}-${activeCommand.id}` : undefined;
 
   useEffect(() => {
     const timer = window.setTimeout(() => inputRef.current?.focus(), 0);
@@ -78,6 +83,10 @@ export function useSearchBar() {
       onQueryKeyDown: handleQueryKeyDown,
     },
     refs: { inputRef },
-    state: { query },
+    state: {
+      activeOptionId,
+      hasResults: filteredCommands.length > 0,
+      query,
+    },
   };
 }

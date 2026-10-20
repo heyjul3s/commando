@@ -9,6 +9,7 @@ import styles from './command-palette.module.css';
 
 export function CommandPalette() {
   const commandPalette = useCommandPalette();
+  const listboxId = useId();
   const titleId = useId();
 
   if (!commandPalette.state.isOpen) {
@@ -52,8 +53,8 @@ export function CommandPalette() {
             </button>
           </div>
 
-          <SearchBar />
-          <AvailableCommands />
+          <SearchBar listboxId={listboxId} />
+          <AvailableCommands listboxId={listboxId} />
         </section>
       </FocusTrap>
     </div>

@@ -15,12 +15,25 @@ const EMPTY_MESSAGE = 'No commands found';
 const UNMATCHED_QUERY = 'no matching command';
 const PROJECT_QUERY = 'projects';
 const SELECTED_ATTRIBUTE = 'aria-selected';
+const ACTIVE_DESCENDANT_ATTRIBUTE = 'aria-activedescendant';
 const STORED_QUERY_NAME = 'Stored query';
 const ACTIVE_INDEX_NAME = 'Active index';
 const PALETTE_STATUS_NAME = 'Palette status';
 const NAVIGATION_QUERY = 'navigation';
 const projectCommand = COMMANDS.find((command) => command.id === 'projects')!;
 const firstCommand = COMMANDS[0];
+
+async function expectActiveOption(input: HTMLElement, option: HTMLElement) {
+  await expect(input).toHaveAttribute('aria-expanded', 'true');
+  await expect(option.id).not.toBe('');
+  await expect(input).toHaveAttribute(ACTIVE_DESCENDANT_ATTRIBUTE, option.id);
+  await expect(option).toHaveAttribute(SELECTED_ATTRIBUTE, 'true');
+
+  const listboxId = input.getAttribute('aria-controls');
+  const listbox = listboxId ? input.ownerDocument.getElementById(listboxId) : null;
+  await expect(listbox).toHaveAttribute('role', 'listbox');
+  await expect(listbox).toContainElement(option);
+}
 
 async function expectDismissed(canvas: StoryContext['canvas']) {
   await waitFor(async () => {
@@ -47,9 +60,14 @@ export async function searchAndSelect({ canvas, step, userEvent }: StoryContext)
   });
 
   await step('Search filters the available commands', async () => {
-    await userEvent.type(canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME }), PROJECT_QUERY);
+    const input = canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME });
+    const initialOption = canvas.getByRole('option', { name: firstCommand.label });
+    await expectActiveOption(input, initialOption);
+    await userEvent.type(input, PROJECT_QUERY);
     await expect(canvas.getAllByRole('option')).toHaveLength(1);
     await expect(canvas.getByRole('option', { name: projectCommand.label })).toBeVisible();
+    await expectActiveOption(input, canvas.getByRole('option', { name: projectCommand.label }));
+    await expect(initialOption).not.toBeInTheDocument();
   });
 
   await step('Selecting updates the workspace and recent history, then dismisses', async () => {
@@ -63,7 +81,7 @@ export async function searchAndSelect({ canvas, step, userEvent }: StoryContext)
 }
 
 export async function clearSearch({ canvas, step, userEvent }: StoryContext) {
-  const input = canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME });
+  const input = canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME });
   const dialog = canvas.getByRole('dialog', { name: DIALOG_NAME });
   const initialHeight = dialog.getBoundingClientRect().height;
 
@@ -71,6 +89,9 @@ export async function clearSearch({ canvas, step, userEvent }: StoryContext) {
     await userEvent.type(input, UNMATCHED_QUERY);
     await expect(canvas.getByText(EMPTY_MESSAGE)).toBeVisible();
     await expect(canvas.queryAllByRole('option')).toHaveLength(0);
+    await expect(input).not.toHaveAttribute(ACTIVE_DESCENDANT_ATTRIBUTE);
+    await expect(input).toHaveAttribute('aria-expanded', 'false');
+    await expect(input).not.toHaveAttribute('aria-controls');
     await expect(dialog.getBoundingClientRect().height).toBeCloseTo(initialHeight, 0);
   });
 
@@ -78,6 +99,7 @@ export async function clearSearch({ canvas, step, userEvent }: StoryContext) {
     await userEvent.click(canvas.getByRole('button', { name: CLEAR_BUTTON_NAME }));
 
     await expect(input).toHaveValue('');
+    await expectActiveOption(input, canvas.getByRole('option', { name: firstCommand.label }));
     await expect(input).toHaveFocus();
     await expect(canvas.getAllByRole('option')).toHaveLength(COMMANDS.length);
     await expect(canvas.getByRole('option', { name: firstCommand.label })).toBeVisible();
@@ -92,12 +114,13 @@ export async function closeAndReopen(context: StoryContext) {
 
   await step('Enter a query and highlight another command', async () => {
     await userEvent.type(
-      canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME }),
+      canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME }),
       NAVIGATION_QUERY,
     );
     const command = canvas.getByRole('option', { name: projectCommand.label });
     await userEvent.hover(command);
     await expect(command).toHaveAttribute(SELECTED_ATTRIBUTE, 'true');
+    await expectActiveOption(canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME }), command);
     await expect(canvas.getByLabelText(STORED_QUERY_NAME)).toHaveTextContent(NAVIGATION_QUERY);
     await expect(canvas.getByLabelText(ACTIVE_INDEX_NAME)).toHaveTextContent('1');
   });
@@ -115,7 +138,7 @@ export async function closeAndReopen(context: StoryContext) {
   await step('Reopening resets the query and highlight', async () => {
     await userEvent.click(canvas.getByRole('button', { name: OPEN_BUTTON_NAME }));
 
-    const input = canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME });
+    const input = canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME });
 
     await expect(input).toHaveValue('');
     await waitFor(async () => {
@@ -137,7 +160,7 @@ export async function closeAndReopen(context: StoryContext) {
 
 export async function escapeDismiss({ canvas, step, userEvent }: StoryContext) {
   await step('Escape from the search field dismisses the dialog', async () => {
-    await userEvent.click(canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME }));
+    await userEvent.click(canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME }));
     await userEvent.keyboard('{Escape}');
     await expectDismissed(canvas);
   });
@@ -147,7 +170,7 @@ export async function backdropDismiss({ canvas, step, userEvent }: StoryContext)
   const dialog = canvas.getByRole('dialog', { name: DIALOG_NAME });
 
   await step('Interacting inside the dialog keeps it open', async () => {
-    await userEvent.click(canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME }));
+    await userEvent.click(canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME }));
     await expect(dialog).toBeVisible();
   });
 
@@ -159,29 +182,38 @@ export async function backdropDismiss({ canvas, step, userEvent }: StoryContext)
 }
 
 export async function keyboardSelection({ canvas, step, userEvent }: StoryContext) {
-  const input = canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME });
+  const input = canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME });
   const navigationCommands = getAvailableCommands(COMMANDS, 'navigation').filteredCommands;
 
   await step('Arrow keys wrap through filtered results', async () => {
     await userEvent.type(input, 'navigation');
     await expect(canvas.getAllByRole('option')).toHaveLength(navigationCommands.length);
 
+    await expectActiveOption(input, canvas.getByRole('option', { name: firstCommand.label }));
+
     await userEvent.keyboard('{ArrowUp}');
     await expect(
       canvas.getByRole('option', { name: navigationCommands[navigationCommands.length - 1].label }),
     ).toHaveAttribute(SELECTED_ATTRIBUTE, 'true');
+    await expectActiveOption(
+      input,
+      canvas.getByRole('option', { name: navigationCommands[navigationCommands.length - 1].label }),
+    );
 
     await userEvent.keyboard('{ArrowDown}');
     await expect(canvas.getByRole('option', { name: firstCommand.label })).toHaveAttribute(
       SELECTED_ATTRIBUTE,
       'true',
     );
+    await expectActiveOption(input, canvas.getByRole('option', { name: firstCommand.label }));
 
     await userEvent.keyboard('{ArrowDown}');
     await expect(canvas.getByRole('option', { name: projectCommand.label })).toHaveAttribute(
       SELECTED_ATTRIBUTE,
       'true',
     );
+
+    await expectActiveOption(input, canvas.getByRole('option', { name: projectCommand.label }));
 
     await expect(input).toHaveFocus();
   });

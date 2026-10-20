@@ -44,7 +44,7 @@ async function dispatchKeyDown(input: HTMLElement, event: KeyboardEvent) {
 // -----------------------------------------------------------------------------
 
 export async function createNewQuery({ canvas, step, userEvent }: StoryContext) {
-  const input = canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME });
+  const input = canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME });
 
   await step('Query starts empty', async () => {
     await expect(input).toHaveValue('');
@@ -59,7 +59,7 @@ export async function createNewQuery({ canvas, step, userEvent }: StoryContext) 
 }
 
 export async function editExistingQuery({ canvas, step, userEvent }: StoryContext) {
-  const input = canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME });
+  const input = canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME });
 
   await step('Existing query is displayed', async () => {
     await expect(input).toHaveValue(searchBarFixtures.existingQuery.query);
@@ -73,7 +73,7 @@ export async function editExistingQuery({ canvas, step, userEvent }: StoryContex
 }
 
 export async function clearQuery({ canvas, step, userEvent }: StoryContext) {
-  const input = canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME });
+  const input = canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME });
 
   await step('The fixture starts with a query and a nonzero highlight', async () => {
     await expect(input).toHaveValue(searchBarFixtures.highlighted.query);
@@ -94,7 +94,7 @@ export async function clearQuery({ canvas, step, userEvent }: StoryContext) {
 export async function externalStoreUpdate({ canvas, step, userEvent }: StoryContext) {
   await step('A store update is reflected in the input', async () => {
     await userEvent.click(canvas.getByRole('button', { name: EXTERNAL_QUERY_BUTTON_NAME }));
-    await expect(canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME })).toHaveValue(
+    await expect(canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME })).toHaveValue(
       externalQuery,
     );
     await expect(canvas.getByLabelText(STORED_QUERY_NAME)).toHaveTextContent(externalQuery);
@@ -108,14 +108,14 @@ export async function externalStoreUpdate({ canvas, step, userEvent }: StoryCont
 export async function initialFocus({ canvas, step }: StoryContext) {
   await step('Mounting focuses the search input', async () => {
     await waitFor(async () => {
-      await expect(canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME })).toHaveFocus();
+      await expect(canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME })).toHaveFocus();
     });
   });
 }
 
 export async function keyboardNavigation({ canvas, step, userEvent }: StoryContext) {
   await step('Arrow keys wrap the highlighted index in both directions', async () => {
-    const input = canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME });
+    const input = canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME });
 
     await userEvent.click(input);
     await userEvent.keyboard('{ArrowUp}');
@@ -132,7 +132,7 @@ export async function keyboardNavigation({ canvas, step, userEvent }: StoryConte
 
 export async function keyboardSelection({ canvas, step, userEvent }: StoryContext) {
   await step('Navigate the filtered results', async () => {
-    await userEvent.type(canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME }), SETTINGS_QUERY);
+    await userEvent.type(canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME }), SETTINGS_QUERY);
     await userEvent.keyboard('{ArrowDown}');
     await expect(canvas.getByLabelText(ACTIVE_INDEX_NAME)).toHaveTextContent('1');
   });
@@ -152,7 +152,7 @@ export async function emptyResultsKeyboard({ canvas, step, userEvent }: StoryCon
     'Navigation and Enter with no results leave selection and open state unchanged',
     async () => {
       const selection = canvas.getByLabelText(SELECTED_COMMAND_NAME).textContent;
-      await userEvent.click(canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME }));
+      await userEvent.click(canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME }));
       await userEvent.keyboard('{ArrowDown}{ArrowUp}{Enter}');
       await expect(canvas.getByLabelText(ACTIVE_INDEX_NAME)).toHaveTextContent('0');
       await expect(canvas.getByLabelText(PALETTE_STATUS_NAME)).toHaveTextContent('Open');
@@ -164,12 +164,12 @@ export async function emptyResultsKeyboard({ canvas, step, userEvent }: StoryCon
 
 export async function clearWithKeyboard({ canvas, step, userEvent }: StoryContext) {
   await step('Enter on Clear search clears rather than selecting a command', async () => {
-    await userEvent.click(canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME }));
+    await userEvent.click(canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME }));
     await userEvent.tab();
     await expect(canvas.getByRole('button', { name: CLEAR_BUTTON_NAME })).toHaveFocus();
     await userEvent.keyboard('{Enter}');
-    await expect(canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME })).toHaveValue('');
-    await expect(canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME })).toHaveFocus();
+    await expect(canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME })).toHaveValue('');
+    await expect(canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME })).toHaveFocus();
     await expect(canvas.getByLabelText(PALETTE_STATUS_NAME)).toHaveTextContent('Open');
     await expect(canvas.getByLabelText(RECENT_COMMANDS_NAME)).toBeEmptyDOMElement();
   });
@@ -180,7 +180,7 @@ export async function clearWithKeyboard({ canvas, step, userEvent }: StoryContex
 // -----------------------------------------------------------------------------
 
 export async function preventKeyboardDefaults({ canvas, step }: StoryContext) {
-  const input = canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME });
+  const input = canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME });
 
   await step(
     'Navigation and Enter prevent browser defaults, including with no results',
@@ -195,7 +195,7 @@ export async function preventKeyboardDefaults({ canvas, step }: StoryContext) {
 }
 
 export async function ignorePreventedEvents({ canvas, step }: StoryContext) {
-  const input = canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME });
+  const input = canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME });
   const initialState = getStoreSnapshot(canvas);
 
   await step(
@@ -212,7 +212,7 @@ export async function ignorePreventedEvents({ canvas, step }: StoryContext) {
 }
 
 export async function ignoreCompositionEvents({ canvas, step }: StoryContext) {
-  const input = canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME });
+  const input = canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME });
   const initialState = getStoreSnapshot(canvas);
 
   await step('IME composition keys stay unhandled and leave store state unchanged', async () => {
@@ -232,7 +232,7 @@ export async function ignoreCompositionEvents({ canvas, step }: StoryContext) {
 }
 
 export async function ignoreClosedPaletteKeys({ canvas, step }: StoryContext) {
-  const input = canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME });
+  const input = canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME });
   const initialState = getStoreSnapshot(canvas);
 
   await step('A closed palette leaves navigation and Enter unhandled', async () => {
@@ -255,7 +255,7 @@ export async function ignoreUnrelatedKeys({ canvas, step }: StoryContext) {
       cancelable: true,
       key: 'ArrowLeft',
     });
-    await dispatchKeyDown(canvas.getByRole('textbox', { name: SEARCH_INPUT_NAME }), event);
+    await dispatchKeyDown(canvas.getByRole('combobox', { name: SEARCH_INPUT_NAME }), event);
     await expect(event.defaultPrevented).toBe(false);
     await expect(getStoreSnapshot(canvas)).toEqual(initialState);
   });

@@ -7,6 +7,9 @@ import {
 import { SearchBar } from '../search-bar';
 
 const meta = {
+  args: {
+    listboxId: 'search-bar-story-results',
+  },
   component: SearchBar,
   decorators: [withSearchBarSurface, withCommandPaletteProvider],
   parameters: {
