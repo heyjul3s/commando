@@ -11,7 +11,13 @@ const meta = {
 } satisfies Meta<typeof WorkspacePreviewSidebar>;
 
 export default meta;
+
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
-export const Dark: Story = { parameters: { sidebarTheme: 'dark' } };
+
+export const Dark: Story = {
+  parameters: {
+    sidebarTheme: 'dark',
+  },
+};
