@@ -9,7 +9,7 @@ export function WorkspaceRecentCommands() {
   const { isEmptyRecentCommands, recentCommands } = derived;
 
   return (
-    <section className={styles['workspace-recent-commands']} aria-label="Recent commands">
+    <section aria-label="Recent commands" className={styles['workspace-recent-commands']}>
       <h2 className={styles['workspace-recent-commands__heading']} id="recent-commands-heading">
         Recent commands
       </h2>
@@ -24,7 +24,7 @@ export function WorkspaceRecentCommands() {
 
             return (
               <li className={styles['workspace-recent-commands__row']} key={recentCommand.id}>
-                <Icon size={16} aria-hidden="true" />
+                <Icon aria-hidden="true" size={16} />
                 <span>{recentCommand.label}</span>
               </li>
             );
@@ -43,7 +43,7 @@ export function WorkspaceRecentCommands() {
           onClick={actions.onClearRecentCommands}
           type="button"
         >
-          <ListX size={18} aria-hidden="true" />
+          <ListX aria-hidden="true" size={18} />
           Clear recent commands
         </button>
       </div>

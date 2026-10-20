@@ -12,8 +12,8 @@ export function WorkspacePreview() {
 
   return (
     <section
-      className={styles['workspace-preview']}
       aria-label="Command palette component showcase"
+      className={styles['workspace-preview']}
     >
       <WorkspacePreviewSidebar />
 
@@ -22,14 +22,14 @@ export function WorkspacePreview() {
 
         <div className={styles['workspace-preview__content-grid']}>
           <section
-            className={styles['workspace-preview__primary-panel']}
             aria-label="Selected command"
+            className={styles['workspace-preview__primary-panel']}
           >
             <p className={styles['workspace-preview__panel-label']}>Last selected</p>
 
             <h2 className={styles['workspace-preview__command-heading']}>
               <span className={styles['workspace-preview__primary-panel-icon']}>
-                <selectedCommand.icon size={20} aria-hidden="true" />
+                <selectedCommand.icon aria-hidden="true" size={20} />
               </span>
               <span className={styles['workspace-preview__command-label']}>
                 {selectedCommand.label}

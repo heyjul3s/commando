@@ -24,10 +24,10 @@ export function AvailableCommands({ listboxId, tabIndex }: AvailableCommandsProp
 
   const commandGroups = Object.entries(groupedCommands).map(([group, groupCommands]) => (
     <div
+      aria-label={group}
       className={styles['available-commands__group']}
       key={group}
       role="group"
-      aria-label={group}
     >
       <div className={styles['available-commands__group-label']}>{group}</div>
       {groupCommands.map((command) => {
@@ -39,19 +39,19 @@ export function AvailableCommands({ listboxId, tabIndex }: AvailableCommandsProp
 
         return (
           <button
+            aria-selected={selected}
             className={styles['available-commands__item']}
-            id={`${listboxId}-${command.id}`}
             data-selected={selected}
+            id={`${listboxId}-${command.id}`}
             key={command.id}
+            onClick={handlers.onClick}
+            onMouseEnter={handlers.onMouseEnter}
             role="option"
             tabIndex={-1}
-            aria-selected={selected}
             type="button"
-            onMouseEnter={handlers.onMouseEnter}
-            onClick={handlers.onClick}
           >
             <span className={styles['available-commands__item-icon']}>
-              <Icon size={17} aria-hidden="true" />
+              <Icon aria-hidden="true" size={17} />
             </span>
             <span className={styles['available-commands__item-label']}>{command.label}</span>
           </button>
@@ -62,10 +62,10 @@ export function AvailableCommands({ listboxId, tabIndex }: AvailableCommandsProp
 
   return (
     <div
-      className={styles['available-commands']}
-      role="listbox"
       aria-label="Available commands"
+      className={styles['available-commands']}
       id={listboxId}
+      role="listbox"
       tabIndex={tabIndex}
     >
       {commandGroups}

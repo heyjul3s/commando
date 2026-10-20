@@ -3,9 +3,9 @@ import styles from './workspace-preview-sidebar.module.css';
 
 export function WorkspacePreviewSidebar() {
   return (
-    <nav className={styles['workspace-preview-sidebar']} aria-label="Workspace">
+    <nav aria-label="Workspace" className={styles['workspace-preview-sidebar']}>
       <div className={styles['workspace-preview-sidebar__brand-mark']}>
-        <Command size={18} aria-hidden="true" />
+        <Command aria-hidden="true" size={18} />
       </div>
 
       <div

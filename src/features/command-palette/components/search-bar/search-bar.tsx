@@ -11,32 +11,32 @@ export function SearchBar({ listboxId }: SearchBarProps) {
 
   return (
     <div className={styles['search-bar']}>
-      <Search className={styles['search-bar__icon']} size={18} aria-hidden="true" />
+      <Search aria-hidden="true" className={styles['search-bar__icon']} size={18} />
 
       <input
+        aria-activedescendant={state.activeOptionId}
+        aria-autocomplete="list"
+        aria-controls={state.hasResults ? listboxId : undefined}
+        aria-expanded={state.hasResults}
+        aria-label="Search commands"
         className={styles['search-bar__input']}
-        ref={refs.inputRef}
-        role="combobox"
-        value={state.query}
         onChange={actions.onQueryChange}
         onKeyDown={actions.onQueryKeyDown}
         placeholder="Search commands..."
-        aria-activedescendant={state.activeOptionId}
-        aria-label="Search commands"
-        aria-autocomplete="list"
-        aria-expanded={state.hasResults}
-        aria-controls={state.hasResults ? listboxId : undefined}
+        ref={refs.inputRef}
+        role="combobox"
+        value={state.query}
       />
 
       {state.query !== '' && (
         <button
-          className={styles['search-bar__clear-button']}
-          type="button"
-          onClick={actions.onClearQuery}
           aria-label="Clear search"
+          className={styles['search-bar__clear-button']}
+          onClick={actions.onClearQuery}
           title="Clear search"
+          type="button"
         >
-          <SearchX className={styles['search-bar__icon']} size={20} aria-hidden="true" />
+          <SearchX aria-hidden="true" className={styles['search-bar__icon']} size={20} />
         </button>
       )}
     </div>

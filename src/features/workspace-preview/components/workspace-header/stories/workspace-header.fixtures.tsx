@@ -34,7 +34,7 @@ export function withWorkspaceHeaderFixture(
     context.parameters.workspaceHeaderFixture ?? workspaceHeaderFixtures.closed;
 
   return (
-    <CommandPaletteProvider key={`${context.id}:${fixture.isOpen}`} initialValues={fixture}>
+    <CommandPaletteProvider initialValues={fixture} key={`${context.id}:${fixture.isOpen}`}>
       <div className={styles.fixture}>
         <div className={styles['fixture__surface']}>
           <Story />

@@ -22,7 +22,7 @@ export function AppProviders({
   themePreference,
 }: AppProvidersProps) {
   return (
-    <ThemeProvider preference={themePreference} persist={persistTheme}>
+    <ThemeProvider persist={persistTheme} preference={themePreference}>
       <CombinedAppProviders>{children}</CombinedAppProviders>
     </ThemeProvider>
   );

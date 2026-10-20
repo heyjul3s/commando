@@ -132,7 +132,7 @@ export function withCommandPaletteFixture(
       <div className={styles.fixture}>
         <PaletteLauncher />
         {showStatus && (
-          <aside className={styles['fixture__panel']} aria-label="Story fixture state">
+          <aside aria-label="Story fixture state" className={styles['fixture__panel']}>
             <strong>Story fixture state</strong>
             <p className={styles['fixture__hint']}>
               Test readout — not part of the command palette.

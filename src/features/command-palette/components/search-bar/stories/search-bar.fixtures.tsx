@@ -138,7 +138,6 @@ function ExternalQueryControl() {
   return (
     <div style={{ marginTop: '1rem' }}>
       <button
-        type="button"
         aria-describedby={hintId}
         onClick={() => palette.getState().actions.setQuery(externalQuery)}
         style={{
@@ -152,6 +151,7 @@ function ExternalQueryControl() {
           fontWeight: 600,
           padding: '0.5rem 0.75rem',
         }}
+        type="button"
       >
         Update query from store
       </button>
@@ -206,9 +206,9 @@ function SearchSuggestionsFixture({ listboxId }: { listboxId: string }) {
 
   return (
     <div
+      aria-label="Search suggestions fixture"
       id={listboxId}
       role="listbox"
-      aria-label="Search suggestions fixture"
       style={{
         clipPath: 'inset(50%)',
         height: 1,
@@ -219,10 +219,10 @@ function SearchSuggestionsFixture({ listboxId }: { listboxId: string }) {
     >
       {filteredCommands.map((command, index) => (
         <span
+          aria-selected={index === activeIndex}
           id={`${listboxId}-${command.id}`}
           key={command.id}
           role="option"
-          aria-selected={index === activeIndex}
         >
           {command.label}
         </span>

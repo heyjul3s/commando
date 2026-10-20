@@ -15,10 +15,10 @@ export function WorkspaceHeader() {
 
       <button
         className={styles['workspace-header__trigger-button']}
-        type="button"
         onClick={actions.onOpenCommandPalette}
+        type="button"
       >
-        <Search size={17} aria-hidden="true" />
+        <Search aria-hidden="true" size={17} />
         <span>Open command menu</span>
         <kbd>⌘K</kbd>
       </button>
@@ -26,7 +26,7 @@ export function WorkspaceHeader() {
       <label className={styles['workspace-header__theme']}>
         Theme
         <span className={styles['workspace-header__theme-control']}>
-          <select value={state.themePreference} onChange={actions.onThemeChange}>
+          <select onChange={actions.onThemeChange} value={state.themePreference}>
             <option value={THEME.System}>System</option>
             <option value={THEME.Light}>Light</option>
             <option value={THEME.Dark}>Dark</option>

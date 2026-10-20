@@ -19,8 +19,8 @@ export function CommandPalette() {
   return (
     <div
       className={styles['command-palette__overlay']}
-      role="presentation"
       onMouseDown={commandPalette.actions.onCloseCommandPalette}
+      role="presentation"
     >
       {' '}
       <FocusTrap
@@ -31,11 +31,11 @@ export function CommandPalette() {
         }}
       >
         <section
-          className={styles['command-palette']}
-          role="dialog"
-          aria-modal="true"
           aria-labelledby={titleId}
+          aria-modal="true"
+          className={styles['command-palette']}
           onMouseDown={commandPalette.actions.onDialogMouseDown}
+          role="dialog"
         >
           <div className={styles['command-palette__header']}>
             <h2 className={styles['command-palette__title']} id={titleId}>
@@ -43,13 +43,13 @@ export function CommandPalette() {
             </h2>
 
             <button
-              className={styles['command-palette__close-button']}
-              type="button"
-              onClick={commandPalette.actions.onCloseCommandPalette}
               aria-label="Close command palette"
+              className={styles['command-palette__close-button']}
+              onClick={commandPalette.actions.onCloseCommandPalette}
               title="Close command palette"
+              type="button"
             >
-              <X size={18} aria-hidden="true" />
+              <X aria-hidden="true" size={18} />
             </button>
           </div>
 

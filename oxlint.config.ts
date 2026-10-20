@@ -13,6 +13,13 @@ export default defineConfig({
   rules: {
     'eslint/no-extra-boolean-cast': 'off',
     'eslint/no-unused-vars': 'error',
+    'perfectionist/sort-jsx-props': [
+      'error',
+      {
+        order: 'asc',
+        type: 'alphabetical',
+      },
+    ],
     'perfectionist/sort-objects': [
       'error',
       {
