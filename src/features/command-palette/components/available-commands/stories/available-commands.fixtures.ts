@@ -69,7 +69,7 @@ function HighlightStatus() {
 
   return createElement(
     'div',
-    { style: { marginTop: 16 } },
+    { style: { fontSize: '16px', lineHeight: 1.5, marginTop: 16 } },
     createElement(
       'p',
       null,
@@ -92,7 +92,7 @@ function SelectionStatus() {
 
   return createElement(
     'div',
-    { style: { marginTop: 16 } },
+    { style: { fontSize: '16px', lineHeight: 1.5, marginTop: 16 } },
     createElement('output', { 'aria-label': 'Palette state' }, isOpen ? 'Open' : 'Closed'),
     createElement(
       'p',

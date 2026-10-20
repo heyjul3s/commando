@@ -12,7 +12,7 @@
 
 .available-commands__group-label {
   color: var(--color-text-muted);
-  font-size: 0.813rem;
+  font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: 0;
   margin: 0;
@@ -27,7 +27,7 @@
   border-radius: 8px;
   color: var(--color-text-primary);
   display: grid;
-  font-size: 1rem;
+  font-size: 1.4rem;
   gap: 10px;
   grid-template-columns: 34px minmax(0, 1fr) auto;
   min-height: 46px;

@@ -11,7 +11,7 @@
   color: var(--color-text-primary);
   cursor: pointer;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: 16px;
   font-weight: 600;
   padding: 10px 16px;
 }
@@ -30,14 +30,15 @@
   border: 1px dashed var(--color-border-strong);
   border-radius: 8px;
   color: var(--color-text-secondary);
-  font-size: 0.813rem;
+  font-size: 16px;
+  line-height: 1.5;
   margin-top: 20px;
   padding: 16px;
 }
 
 .fixture__hint {
   color: var(--color-text-muted);
-  font-size: 0.75rem;
+  font-size: 14px;
   line-height: 1.5;
   margin: 6px 0 16px;
 }
@@ -54,4 +55,8 @@
   color: var(--color-text-primary);
   margin: 0;
   overflow-wrap: anywhere;
+}
+
+.fixture__panel strong {
+  font-size: 18px;
 }

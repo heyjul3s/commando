@@ -82,13 +82,14 @@ function StoreStatus() {
         border: '1px dashed var(--color-border-strong)',
         borderRadius: 8,
         color: 'var(--color-text-secondary)',
-        fontSize: '0.813rem',
+        fontSize: '16px',
+        lineHeight: 1.5,
         marginTop: '1rem',
         padding: '1rem',
       }}
     >
-      <strong>Story fixture state</strong>
-      <p>Test readout — not part of the SearchBar component.</p>
+      <strong style={{ fontSize: '18px' }}>Story fixture state</strong>
+      <p style={{ fontSize: '14px' }}>Test readout — not part of the SearchBar component.</p>
       <p>
         Query: <output aria-label="Stored query">{query}</output>
       </p>
@@ -125,7 +126,7 @@ function ExternalQueryControl() {
           color: 'var(--color-text-primary)',
           cursor: 'pointer',
           font: 'inherit',
-          fontSize: '0.813rem',
+          fontSize: '16px',
           fontWeight: 600,
           padding: '0.5rem 0.75rem',
         }}
@@ -136,7 +137,7 @@ function ExternalQueryControl() {
         id={hintId}
         style={{
           color: 'var(--color-text-muted)',
-          fontSize: '0.75rem',
+          fontSize: '14px',
           lineHeight: 1.5,
           margin: '0.5rem 0 0',
         }}
