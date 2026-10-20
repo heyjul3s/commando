@@ -1,0 +1,216 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Documentation/Design Tokens" />
+
+# Design tokens
+
+`src/styles.css` is the current source of truth. It defines light-mode values on
+`:root` and `[data-theme='light']`, with dark-mode overrides beneath `[data-theme='dark']`. Values use CSS LCH;
+components consume them through custom properties rather than copying colour values.
+
+## Choose by purpose
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Family</th>
+      <th scope="col">Tokens</th>
+      <th scope="col">Use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Brand</td>
+      <td>
+        <code>--brand-primary</code>, <code>--brand-primary-muted</code>,{' '}
+        <code>--brand-primary-strong</code>
+      </td>
+      <td>Brand palette primitives</td>
+    </tr>
+    <tr>
+      <td>Accent</td>
+      <td>
+        <code>--color-accent</code>, <code>--color-accent-muted</code>
+      </td>
+      <td>Semantic aliases for emphasis</td>
+    </tr>
+    <tr>
+      <td>Page</td>
+      <td>
+        <code>--color-background</code>
+      </td>
+      <td>Workspace and page backdrop</td>
+    </tr>
+    <tr>
+      <td>Surface</td>
+      <td>
+        <code>--color-surface</code>, <code>--color-surface-raised</code>,{' '}
+        <code>--color-surface-muted</code>, <code>--color-surface-soft</code>
+      </td>
+      <td>Containers at different visual levels</td>
+    </tr>
+    <tr>
+      <td>Interaction</td>
+      <td>
+        <code>--color-surface-hover</code>
+      </td>
+      <td>Hovered or highlighted command rows</td>
+    </tr>
+    <tr>
+      <td>Text</td>
+      <td>
+        <code>--color-text-primary</code>, <code>--color-text-secondary</code>,{' '}
+        <code>--color-text-muted</code>, <code>--color-text-soft</code>,{' '}
+        <code>--color-text-inverse</code>
+      </td>
+      <td>Text hierarchy and inverse text</td>
+    </tr>
+    <tr>
+      <td>Icon</td>
+      <td>
+        <code>--color-icon-muted</code>
+      </td>
+      <td>Supporting icon colour</td>
+    </tr>
+    <tr>
+      <td>Border</td>
+      <td>
+        <code>--color-border</code>, <code>--color-border-strong</code>,{' '}
+        <code>--color-border-subtle</code>, <code>--color-border-weak</code>
+      </td>
+      <td>Container boundaries and separators</td>
+    </tr>
+    <tr>
+      <td>Overlay</td>
+      <td>
+        <code>--color-overlay</code>, <code>--color-transparent</code>
+      </td>
+      <td>Modal scrim and deliberately transparent backgrounds</td>
+    </tr>
+    <tr>
+      <td>Shadow</td>
+      <td>
+        <code>--shadow-xs</code>, <code>--shadow-lg</code>, <code>--shadow-overlay</code>
+      </td>
+      <td>Subtle separation, elevated containers, and modal depth</td>
+    </tr>
+  </tbody>
+</table>
+
+“Inverse” is a role, not a guarantee that the token contrasts with every brand
+colour. Verify the actual foreground/background pair before using it.
+
+## Live theme samples
+
+These samples resolve the real CSS variables. They show surfaces and hierarchy,
+not a contrast certification. Each sample explicitly sets its own theme, so both
+remain accurate when the Storybook preview theme changes.
+
+<div
+  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}
+>
+  <section
+    data-theme="light"
+    aria-label="Light token sample"
+    style={{
+      padding: 20,
+      borderRadius: 8,
+      background: 'var(--color-background)',
+      color: 'var(--color-text-primary)',
+    }}
+  >
+    <h3 style={{ color: 'inherit', marginTop: 0 }}>Default light theme</h3>
+    <div
+      style={{
+        padding: 16,
+        border: '1px solid var(--color-border-strong)',
+        borderRadius: 8,
+        background: 'var(--color-surface-raised)',
+      }}
+    >
+      <p style={{ color: 'var(--color-text-primary)', marginTop: 0 }}>
+        Raised surface and primary text
+      </p>
+      <p style={{ color: 'var(--color-text-muted)' }}>Supporting text</p>
+      <div
+        style={{
+          padding: 12,
+          borderRadius: 8,
+          background: 'var(--color-surface-hover)',
+          color: 'var(--color-text-primary)',
+        }}
+      >
+        Highlighted row
+      </div>
+    </div>
+  </section>
+  <section
+    data-theme="dark"
+    aria-label="Dark token sample"
+    style={{
+      padding: 20,
+      borderRadius: 8,
+      background: 'var(--color-background)',
+      color: 'var(--color-text-primary)',
+    }}
+  >
+    <h3 style={{ color: 'inherit', marginTop: 0 }}>Dark theme override</h3>
+    <div
+      style={{
+        padding: 16,
+        border: '1px solid var(--color-border-strong)',
+        borderRadius: 8,
+        background: 'var(--color-surface-raised)',
+      }}
+    >
+      <p style={{ color: 'var(--color-text-primary)', marginTop: 0 }}>
+        Raised surface and primary text
+      </p>
+      <p style={{ color: 'var(--color-text-muted)' }}>Supporting text</p>
+      <div
+        style={{
+          padding: 12,
+          borderRadius: 8,
+          background: 'var(--color-surface-hover)',
+          color: 'var(--color-text-primary)',
+        }}
+      >
+        Highlighted row
+      </div>
+    </div>
+  </section>
+</div>
+
+## Apply a theme and a surface
+
+```tsx
+<div
+  data-theme="dark"
+  style={{
+    background: 'var(--color-surface-raised)',
+    color: 'var(--color-text-primary)',
+  }}
+>
+  <AvailableCommands />
+</div>
+```
+
+The attribute changes inherited token values. The explicit background supplies
+an actual surface. `color-scheme` helps native controls render appropriately;
+it does not paint the component's container.
+
+In the application, the command palette supplies `--color-surface-raised` around
+the list. A standalone list story should reproduce that surface. Storybook's
+manager theme changes its surrounding interface, not these application tokens.
+
+For a global theme switch, apply the attribute to the preview document or a
+wrapper containing every themed surface. A dark child overrides its inherited
+variables; removing that attribute restores inherited values. A nested
+`data-theme="light"` explicitly restores the light tokens beneath a dark ancestor.
+
+## Extending the token set
+
+Use a semantic token when an existing role fits. Add new roles with both theme
+values and examples of their intended pairings. Keep theme overrides together in
+`styles.css`. Spacing, typography, and radii remain component CSS values today;
+this page does not imply those scales are already tokenized.
