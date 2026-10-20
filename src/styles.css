@@ -1,6 +1,7 @@
 @import url('browserux.css');
 
-:root {
+:root,
+[data-theme='light'] {
   --brand-primary: lch(49.5% 88 48.25deg);
   --brand-primary-muted: lch(82% 34 48.25deg);
   --brand-primary-strong: lch(44% 80 48.25deg);
