@@ -14,6 +14,16 @@ export function workspacePreviewActions(
   get: StoreApi<WorkspacePreviewStore>['getState'],
 ): WorkspacePreviewStoreActions {
   return {
+    clearRecentCommands: () => {
+      // Guard clause to prevent unnecessary state updates
+      // No need to set again if length is already 0
+      if (get().recentCommandIds.length === 0) {
+        return;
+      }
+
+      set({ recentCommandIds: [] });
+    },
+
     setSelectedCommand: (selectedCommand: Command) => {
       const state = get();
 
@@ -35,26 +45,16 @@ export function workspacePreviewActions(
         );
 
         return {
-          selectedCommand,
-
           // Add the selected command to the front of the recent commands list
           // and limit the list to the most recent 6 commands
           recentCommandIds: [selectedCommand.id, ...dedupedRecentCommands].slice(
             0,
             RECENT_COMMAND_LIMIT,
           ),
+
+          selectedCommand,
         };
       });
-    },
-
-    clearRecentCommands: () => {
-      // Guard clause to prevent unnecessary state updates
-      // No need to set again if length is already 0
-      if (get().recentCommandIds.length === 0) {
-        return;
-      }
-
-      set({ recentCommandIds: [] });
     },
   };
 }

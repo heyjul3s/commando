@@ -48,9 +48,6 @@ function createWorkspacePreviewStore(initialValues: WorkspacePreviewStoreInitial
           actions: workspacePreviewActions(set, get),
         }),
         {
-          name: STORAGE_KEYS.WorkspacePreview,
-          partialize: (state) => ({ recentCommandIds: state.recentCommandIds }),
-
           // Merge function to handle merging persisted state with current state
           // and guard against invalid or outdated data in localStorage
           merge: (persistedState, currentState) => {
@@ -70,6 +67,9 @@ function createWorkspacePreviewStore(initialValues: WorkspacePreviewStoreInitial
               recentCommandIds: [...new Set(validIds)].slice(0, RECENT_COMMAND_LIMIT),
             };
           },
+          name: STORAGE_KEYS.WorkspacePreview,
+
+          partialize: (state) => ({ recentCommandIds: state.recentCommandIds }),
         },
       ),
     ),

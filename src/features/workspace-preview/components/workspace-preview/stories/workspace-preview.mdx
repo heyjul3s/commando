@@ -1,0 +1,107 @@
+import { Canvas, Meta, Source } from '@storybook/addon-docs/blocks';
+
+import * as Stories from './workspace-preview.stories';
+import * as Interactions from './workspace-preview.interactions.stories';
+
+<Meta title="Features/Workspace Preview/Workspace Preview/Overview" />
+
+# Workspace preview component
+
+The root preview composes the workspace frame, header, selected-command panel,
+and recent-command list. It provides the surrounding screen in which the command
+palette's results become visible.
+
+This page describes the root component. The
+[feature overview](?path=/docs/features-workspace-preview-overview--docs) covers
+history persistence, selection flow, and the feature's complete store contract.
+
+## Composition and subscriptions
+
+The root calls `useWorkspacePreview`, which subscribes only to `selectedCommand`.
+It renders the selected command's icon and label in the “Last selected” panel.
+
+The sidebar is presentational. The header owns its palette-open action through its
+own hook. Recent Commands resolves recent IDs and handles history clearing through
+its own subscription and hook. App does not pass those values or handlers through
+the root preview.
+
+A history-only store update does not trigger the root hook's selection subscription.
+The history list still updates through its own subscription. This is the component
+boundary to preserve when extending the screen.
+
+## Integration
+
+The component takes no props. Render it with both feature providers: its own panel
+and history need the workspace store, while the header needs palette actions.
+
+<Source
+  language="tsx"
+  code={`<AppProviders>
+  <WorkspacePreview />
+  <CommandPalette />
+</AppProviders>`}
+/>
+
+The dialog is a sibling, not a child of Workspace Preview. Omitting it leaves a
+valid workspace render, but the header's open action will have no visible dialog
+to reveal. App already owns these providers and composes both features.
+
+## Visual states
+
+The fixture creates fresh palette and workspace stores for each story. Workspace
+persistence is isolated in memory; saved browser history cannot affect these
+examples and story interactions cannot change application history. A sibling
+CommandPalette is mounted under the same providers, so the header trigger works
+in every example. No test readouts are added to the screen.
+
+- Default: the initial Dashboard selection and empty recent history.
+- With History: Projects selected with three recent commands.
+- Full History: all six history slots populated.
+- Long Selected Label: a synthetic Projects label for reviewing text wrapping.
+
+<Canvas of={Stories.Default} />
+<Canvas of={Stories.WithHistory} />
+<Canvas of={Stories.FullHistory} />
+<Canvas of={Stories.LongSelectedLabel} />
+
+## Interactions
+
+Select Command opens the real palette and chooses Projects, then checks the
+visible selected-command heading, recent list, and palette dismissal.
+
+<Canvas of={Interactions.SelectCommand} />
+
+Clear History removes all recent entries and disables the clear control while
+preserving the selected-command heading.
+
+<Canvas of={Interactions.ClearHistory} />
+
+Update History begins with six entries. A new selection becomes the most recent
+and evicts the oldest. Selecting an existing command moves it to the front
+without creating a duplicate.
+
+<Canvas of={Interactions.UpdateHistory} />
+
+These stories verify component integration. Browser reload persistence and the
+application-level opening shortcut remain covered by Playwright. The story
+harness does not mount the app shortcut listener.
+
+## Story organisation
+
+- `workspace-preview.stories.tsx`: visual states.
+- `workspace-preview.interactions.stories.tsx`: selection and recent-history scenarios.
+- `workspace-preview.interactions.ts`: named steps and visible-outcome assertions.
+- `workspace-preview.fixtures.tsx`: deterministic state, isolated stores, and sibling palette.
+- `workspace-preview-stories.module.css`: application-like preview layout.
+
+## Layout and review
+
+Use a fullscreen or sufficiently wide canvas to judge the screen composition. A
+centred, narrow component canvas is useful for constrained-layout review but is
+not the complete page context. Check long selected labels, an empty history list,
+a full six-item history, and the narrow-screen arrangement.
+
+The selected-command panel is a named section with a heading. History clearing
+must leave that heading intact, and opening the palette should be reviewed with
+focus behaviour in the assembled application. The root preview does not implement
+the dialog's keyboard or modal focus behaviour itself.

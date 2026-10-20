@@ -1,0 +1,12 @@
+.fixture {
+  display: grid;
+  min-height: 100vh;
+  padding: 32px;
+  place-items: center;
+}
+
+@media (width <= 760px) {
+  .fixture {
+    padding: 16px;
+  }
+}

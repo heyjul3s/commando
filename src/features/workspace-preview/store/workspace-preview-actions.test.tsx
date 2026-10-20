@@ -9,8 +9,8 @@ import type { WorkspacePreviewStore } from './workspace-preview-provider';
 function createTestStore() {
   return createStore<WorkspacePreviewStore>((set, get) => ({
     ...workspacePreviewDefaultValues,
-    recentCommandIds: [],
     actions: workspacePreviewActions(set, get),
+    recentCommandIds: [],
   }));
 }
 
@@ -53,6 +53,7 @@ describe('workspacePreviewActions', () => {
 
   it('preserves state when the selected is already the most recent', () => {
     const store = createTestStore();
+
     store.getState().actions.setSelectedCommand(COMMANDS[1]);
 
     const previousState = store.getState();
@@ -64,6 +65,7 @@ describe('workspacePreviewActions', () => {
 
   it('clears history while preserving the selected command', () => {
     const store = createTestStore();
+
     store.getState().actions.setSelectedCommand(COMMANDS[1]);
     store.getState().actions.clearRecentCommands();
 

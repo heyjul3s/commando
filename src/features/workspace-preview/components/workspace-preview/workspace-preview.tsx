@@ -31,8 +31,11 @@ export function WorkspacePreview() {
               <span className={styles['workspace-preview__primary-panel-icon']}>
                 <selectedCommand.icon size={20} aria-hidden="true" />
               </span>
-              <span>{selectedCommand.label}</span>
+              <span className={styles['workspace-preview__command-label']}>
+                {selectedCommand.label}
+              </span>
             </h2>
+
             <p>A single command palette UI component demo</p>
           </section>
 

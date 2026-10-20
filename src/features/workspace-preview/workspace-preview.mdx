@@ -1,0 +1,164 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import * as WorkspaceStories from './components/workspace-preview/stories/workspace-preview.stories';
+
+<Meta title="Features/Workspace Preview/Overview" />
+
+# Workspace preview
+
+The workspace is the command palette's companion demo. It supplies the opening
+trigger, shows the last chosen command, and displays recent choices. It does not
+execute the actions described by those commands or represent a complete workspace product.
+
+<Canvas of={WorkspaceStories.Default} />
+
+This assembled story uses the preview's providers. Its recent history may reflect
+saved browser state. For a reproducible visual or interaction test, provide
+isolated store state and memory-backed persistence as the Available Commands
+fixtures do.
+
+## Composition
+
+```text
+WorkspacePreview
+  useWorkspacePreview
+  WorkspacePreviewSidebar
+  WorkspaceHeader
+    useWorkspaceHeader
+  Selected command panel
+  WorkspaceRecentCommands
+    useWorkspaceRecentCommands
+```
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Piece</th>
+      <th scope="col">Responsibility</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Root preview and hook</td>
+      <td>Subscribe to the selected command and compose the screen</td>
+    </tr>
+    <tr>
+      <td>Sidebar</td>
+      <td>Presentational workspace identity and decorative navigation shapes</td>
+    </tr>
+    <tr>
+      <td>Header and hook</td>
+      <td>Open the command palette through its store</td>
+    </tr>
+    <tr>
+      <td>Recent commands and hook</td>
+      <td>Subscribe to recent IDs, resolve commands, render the empty state, and clear history</td>
+    </tr>
+  </tbody>
+</table>
+
+The sidebar's visual markers are not implemented navigation destinations.
+The feature components take no state or callback props from App; their hooks
+subscribe to the stores relevant to their own UI.
+
+## Selection flow
+
+1. The header calls the palette store to open the command dialog.
+2. The user chooses a result in the palette.
+3. The workspace action `setSelectedCommand` changes the selected command, moves
+   its ID to the front of history, removes duplicates, and caps history at six.
+4. The root preview updates its selected-command panel. The recent-commands
+   component derives its own list from the changed IDs.
+5. Palette selection closes the dialog independently of the workspace display.
+
+A history-only update does not require the root preview hook to rerender: that
+hook subscribes to `selectedCommand`, while history is subscribed to locally.
+Clearing history leaves the selected command unchanged.
+
+## Store and persistence
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Value</th>
+      <th scope="col">Default</th>
+      <th scope="col">Persisted?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>selectedCommand</code>
+      </td>
+      <td>
+        First command in <code>COMMANDS</code>
+      </td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>
+        <code>recentCommandIds</code>
+      </td>
+      <td>Empty array</td>
+      <td>Yes, through Zustand persistence</td>
+    </tr>
+    <tr>
+      <td>
+        <code>actions</code>
+      </td>
+      <td>Selection and history-clear functions</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+The store writes recent IDs under the `WORKSPACE_PREVIEW` local-storage key. It
+does not serialise React icons, whole command objects, or action functions.
+
+On hydration, the merge logic accepts an array of IDs, removes non-string and
+unknown IDs, deduplicates it, and keeps at most six. If no valid array is present,
+the initial state remains. Valid restored IDs preserve their saved order.
+
+The last selected command is not restored from the first recent ID: after a new
+provider mount it defaults to the first catalogue command unless initial values
+specify otherwise. This can produce a selected-command panel different from the
+first item in restored history; those values have different purposes.
+
+## Integration
+
+The assembled application uses `AppProviders`, which includes both feature
+providers. The root preview and history consume the workspace store, and the
+header consumes the palette store, so rendering the full preview requires both.
+
+```tsx
+import { AppProviders } from './app/providers';
+import { WorkspacePreview } from './features/workspace-preview';
+
+export function Example() {
+  return (
+    <AppProviders>
+      <WorkspacePreview />
+    </AppProviders>
+  );
+}
+```
+
+The header can change palette state without rendering a dialog by itself. Mount
+`CommandPalette` alongside `WorkspacePreview` for the full opening/selection flow,
+as `AppContent` does. `App` itself already mounts the providers.
+
+For isolated tests, create fresh providers per scenario. `initialValues` seed a
+store once, and persisted history can override the initial history during
+hydration. Use explicit storage isolation when the scenario requires exact IDs.
+
+## Useful review scenarios
+
+- Fresh history shows “No recent commands” and a disabled clear button.
+- A choice updates the selected-command panel and history together.
+- Repeating an earlier choice moves it to the front without a duplicate.
+- A seventh distinct choice removes the oldest history entry.
+- Clearing returns to the empty state while preserving the selected command.
+- Reloading restores valid history but not the last selected command.
+
+The component stories cover individual appearances; App integration tests cover
+cooperation with the command palette. Review those separately from the sidebar's
+purely visual presentation.

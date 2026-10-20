@@ -37,7 +37,7 @@
 }
 
 .workspace-preview__command-heading {
-  align-items: center;
+  align-items: flex-start;
   display: flex;
   gap: 8px;
 }
@@ -47,10 +47,16 @@
   border-radius: 8px;
   color: var(--color-text-primary);
   display: flex;
+  flex-shrink: 0;
   height: 44px;
   justify-content: center;
   place-items: center;
   width: 44px;
+}
+
+.workspace-preview__command-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .workspace-preview__panel-label {
