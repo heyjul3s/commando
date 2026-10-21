@@ -40,6 +40,8 @@ jobs:
       run: corepack enable && pnpm install --frozen-lockfile
     - name: Build for GitHub Pages
       run: pnpm run build --base=/commando/
+    - name: Build Storybook
+      run: pnpm run build-storybook --output-dir dist/storybook --disable-telemetry
     - name: Upload Pages artifact
       if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
       uses: actions/upload-pages-artifact@v5
