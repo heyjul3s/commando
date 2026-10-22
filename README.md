@@ -1,6 +1,6 @@
 # Commando
 
-A command palette showcase built with React, TypeScript, Vite, and Zustand. Search a command catalogue, navigate with the keyboard, and see your selection and recent history in a responsive workspace preview.
+A command palette showcase built with React, TypeScript, Vite, and Zustand. Search a command catalogue, navigate with the keyboard, and see your selection and recent history in a responsive workspace preview. Visit the **application demo** at [https://heyjul3s.github.io/commando](https://heyjul3s.github.io/commando) or the **Storybook component documentation** at [https://heyjul3s.github.io/commando/storybook](https://heyjul3s.github.io/commando/storybook)
 
 ## Features
 
