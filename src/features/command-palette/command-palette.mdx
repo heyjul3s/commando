@@ -46,7 +46,7 @@ CommandPalette
       <td>
         <code>SearchBar</code> / <code>useSearchBar</code>
       </td>
-      <td>Query editing, query subscription, input focus, and close control</td>
+      <td>Query editing, input focus, combobox associations, keyboard navigation, and clearing</td>
     </tr>
     <tr>
       <td>
@@ -66,7 +66,7 @@ CommandPalette
     </tr>
     <tr>
       <td>Keyboard hook</td>
-      <td>Currently Escape dismissal; search navigation is being redistributed</td>
+      <td>Escape dismissal with already-handled event and IME composition guards</td>
     </tr>
   </tbody>
 </table>
@@ -173,8 +173,10 @@ contrast; a theme supplies token values but does not supply that container.
 
 Pointer selection, query filtering, close controls, and lifecycle reset are
 implemented. Arrow-key navigation and Enter selection are handled on the search
-input, while the palette keyboard hook handles Escape. Modal focus containment
-and restoration also remain unfinished. The
+input, while the palette keyboard hook handles Escape. `focus-trap-react` contains
+focus within the dialog and restores the previously focused element on close
+when it remains available. The application makes the workspace `inert` while
+the palette is open; standalone integrations must manage their own background. The
 [interaction guide](?path=/docs/documentation-interaction--docs) and
 [accessibility guide](?path=/docs/documentation-accessibility--docs) distinguish the
 current behaviour from the intended keyboard model.

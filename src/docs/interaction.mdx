@@ -97,7 +97,7 @@ does not clear the workspace or its history.
     </tr>
     <tr>
       <td>Tab / Shift+Tab</td>
-      <td>Native focus navigation; modal containment is not implemented yet</td>
+      <td>Tab and Shift+Tab wrap within the dialog through focus-trap-react</td>
     </tr>
     <tr>
       <td>Enter / Space on a command button</td>
@@ -105,16 +105,17 @@ does not clear the workspace or its history.
     </tr>
     <tr>
       <td>Arrow keys and Enter in search</td>
-      <td>Custom navigation/selection is currently commented out during the keyboard refactor</td>
+      <td>
+        ArrowUp and ArrowDown wrap through filtered results; Enter selects the highlighted command
+      </td>
     </tr>
   </tbody>
 </table>
 
-The intended boundary is input-specific navigation on the search input and
-palette-wide dismissal on the dialog. Treat that as refactoring direction, not a
-claim that the redistribution is already complete. While composing text with an
-input method, confirmation and candidate-navigation keys must remain available
-to the input method.
+Search navigation runs on the input; the palette keyboard hook handles Escape.
+Both ignore already-handled events and IME composition so confirmation and
+candidate-navigation keys remain available to the input method. On close, the
+focus trap restores the previously focused element when it remains available.
 
 ## What belongs in a story
 

@@ -94,8 +94,10 @@ The top-right X is named Close command palette; the separate SearchX control is
 named Clear search. Results use a consistent viewport-aware height and scroll
 when needed.
 
-Focus containment, background inertness, and focus restoration to the opening
-control are not implemented. Arrow navigation and Enter selection are handled
+The dialog uses `focus-trap-react` to contain Tab and Shift+Tab navigation,
+focus the search input initially, and restore the previously focused control on
+close when it remains available. The application makes the workspace `inert`
+while open; standalone integrations must manage their own background inertness. Arrow navigation and Enter selection are handled
 on the search input; Escape is handled by the palette hook. Application-level
 Command+K and Control+K shortcuts belong to application tests; the fixture
 launcher calls the palette store directly.

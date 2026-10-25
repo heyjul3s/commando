@@ -88,12 +88,15 @@ result rather than changing production colours solely to silence a tool.
 
 ## Current implementation boundaries
 
-- The search input has an accessible name and receives focus when it mounts.
-- Close and history-clearing controls have visible or visually hidden labels.
-- Command rows expose `role="option"` and `aria-selected` inside a named listbox.
-- Focus trapping, background inertness, and restoration to the opener are not yet implemented.
-- Search-specific arrow navigation and Enter selection are being refactored; do not infer support from old tests alone.
-- The input has no combobox/listbox association through `aria-controls` and `aria-activedescendant`; review the final widget pattern before claiming complete screen-reader navigation.
+- The search input is a named combobox and receives focus when it mounts. The assembled dialog also configures it as the focus trap's initial target.
+- Close and history-clearing controls have visible or visually hidden labels. Clear search returns focus to the input.
+- `FocusTrap` from `focus-trap-react` contains Tab and Shift+Tab navigation within the dialog and restores the previously focused element when the dialog unmounts, provided that element is still available to receive focus.
+- The application sets `inert` on the workspace while the palette is open. This is owned by `AppContent`, so standalone palette integrations must manage their own background inertness.
+- Command rows expose `role="option"`, stable IDs, and `aria-selected` inside a named listbox. Rows are excluded from the Tab order.
+- The combobox uses `aria-controls` to reference the result list and `aria-activedescendant` to identify the highlighted option while focus stays in the input. `aria-expanded` reflects whether results are present.
+- ArrowUp and ArrowDown wrap through filtered results; Enter selects the highlighted command and closes the palette. Hover updates the same highlight and active-descendant association.
+- With no matches, the list is replaced by a “No commands found” status. The input reports `aria-expanded="false"` and omits `aria-controls` and `aria-activedescendant`; Enter leaves the palette open.
+- Search navigation and palette Escape handling ignore already-handled events and IME composition. Escape dismissal belongs to the palette hook; the focus trap has `escapeDeactivates: false`.
 
 These are implementation observations, not a conformance statement. Use the
 assembled palette for manual focus and assistive-technology review.
