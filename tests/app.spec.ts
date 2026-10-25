@@ -160,6 +160,45 @@ describe('Command Palette', () => {
     });
   });
 
+  test('traps focus and restores it to the opener on dismissal', async ({ page }) => {
+    const app = getAppLocators(page);
+
+    await app.openPaletteButton.focus();
+    await app.openPaletteButton.press('Enter');
+    await expect(app.searchInput).toBeFocused();
+
+    await page.keyboard.press('Tab');
+    await expect(app.closePaletteButton).toBeFocused();
+    await page.keyboard.press('Shift+Tab');
+    await expect(app.searchInput).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(app.closePaletteButton).toBeFocused();
+
+    await app.searchInput.fill('projects');
+    await app.closePaletteButton.focus();
+    await page.keyboard.press('Shift+Tab');
+    await expect(app.clearSearchButton).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(app.closePaletteButton).toBeFocused();
+    await page.keyboard.press('Shift+Tab');
+    await expect(app.clearSearchButton).toBeFocused();
+
+    await page.keyboard.press('Escape');
+    await expect(app.dialog).not.toBeVisible();
+    await expect(app.openPaletteButton).toBeFocused();
+
+    await app.openPaletteButton.focus();
+    await app.openPaletteButton.press('Enter');
+    await app.closePaletteButton.click();
+    await expect(app.openPaletteButton).toBeFocused();
+
+    await app.openPaletteButton.focus();
+    await app.openPaletteButton.press('Enter');
+    await app.searchInput.press('Enter');
+    await expect(app.dialog).not.toBeVisible();
+    await expect(app.openPaletteButton).toBeFocused();
+  });
+
   test('makes the workspace inert only while the palette is open', async ({ page }) => {
     const app = getAppLocators(page);
     const workspace = app.background;
